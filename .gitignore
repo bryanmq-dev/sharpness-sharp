@@ -1,0 +1,11 @@
+bin/
+obj/
+node_modules/
+.tailwind-watch.pid
+*.db
+*.db-shm
+*.db-wal
+Ventas.Web/wwwroot/app.css
+Ventas.App/wwwroot/app.css
+.tailwind-watch.pid
+wwwroot/app.css

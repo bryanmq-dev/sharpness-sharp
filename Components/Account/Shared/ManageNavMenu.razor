@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using sharpness_sharp.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+
+<ul class="flex flex-col">
+    <li>
+        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage" Match="NavLinkMatch.All">Profile</NavLink>
+    </li>
+    <li>
+        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/Email">Email</NavLink>
+    </li>
+    <li>
+        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/ChangePassword">Password</NavLink>
+    </li>
+    @if (hasExternalLogins)
+    {
+        <li>
+            <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/ExternalLogins">External logins</NavLink>
+        </li>
+    }
+    <li>
+        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/TwoFactorAuthentication">Two-factor authentication</NavLink>
+    </li>
+    <li>
+        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/Passkeys">Passkeys</NavLink>
+    </li>
+    <li>
+        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/PersonalData">Personal data</NavLink>
+    </li>
+</ul>
+
+@code {
+    private bool hasExternalLogins;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    }
+}
