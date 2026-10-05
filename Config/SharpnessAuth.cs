@@ -12,20 +12,21 @@ namespace sharpness_sharp.Config
         /// el DbContext de Identity, el esquema de cookies, el AuthenticationStateProvider,
         /// los scoped del área de Account y el UserManager/SignInManager.
         ///
-        /// Va encadenado después de UseDB, porque reutiliza el MISMO motor y la misma
-        /// cadena de conexión que se configuró ahí:
+        /// UseAuth es la entrada: llama a UseDB() por dentro con conAuth: true, así la base
+        /// queda configurada una sola vez y con el contexto que corresponde.
         ///
-        ///     builder.Services.UseDB(builder.Configuration).UseAuth();
+        ///     builder.Services.UseAuth(builder.Configuration);   // con login
+        ///     builder.Services.UseDB(builder.Configuration);     // sin login
         /// </summary>
-        public static IServiceCollection UseAuth(this IServiceCollection services)
-        {
-            var db = services.FirstOrDefault(d => d.ServiceType == typeof(DatabaseParams))?.ImplementationInstance as DatabaseParams
-                ?? throw new InvalidOperationException(
-                    "UseAuth() necesita que UseDB() se haya llamado antes: builder.Services.UseDB(...).UseAuth();");
+        public static IServiceCollection UseAuth(this IServiceCollection services, IConfiguration configuration)
+            => services.UseAuth(DatabaseParams.FromConfiguration(configuration));
 
-            // El contexto de Identity. Es ApplicationAuthDbContext (el IdentityDbContext),
-            // no ApplicationDbContext, que queda libre para las tablas de la aplicación.
-            services.AddDbContext<ApplicationAuthDbContext>(db.Configurar);
+        /// <summary>Lo mismo, con los parámetros de la base escritos a mano.</summary>
+        public static IServiceCollection UseAuth(this IServiceCollection services, DatabaseParams db)
+        {
+            // El flag es lo único que cambia en UseDB: registra ApplicationAuthDbContext
+            // en lugar de ApplicationDbContext. Un solo contexto, no dos.
+            services.UseDB(db, conAuth: true);
 
             // Deja el estado de autenticación disponible como parámetro en cascada,
             // que es lo que consumen <AuthorizeView> y [Authorize] en los componentes.

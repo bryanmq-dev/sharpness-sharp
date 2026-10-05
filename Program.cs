@@ -6,11 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Habilita IHttpClientFactory y el cliente scoped para todas las instancias de la aplicacion.
 builder.Services.UseHttpClient(builder.Configuration);
 
-// El motor y sus datos salen de la sección "Database" de appsettings.json.
-// Para cambiar de SQLite a Postgres no se toca una línea de C#: se cambia el JSON,
-// o se exporta Database__Engine=POSTGRESQL antes de arrancar.
-// UseAuth se encadena después: reutiliza el motor y la cadena que configuró UseDB.
-builder.Services.UseDB(builder.Configuration).UseAuth();
+// Identity + base de datos en una sola llamada: UseAuth() configura la base por dentro.
+// El motor y sus datos salen de la sección "Database" de appsettings.json, así que para
+// pasar de SQLite a Postgres no se toca C#: se cambia el JSON o se exporta
+// Database__Engine=POSTGRESQL antes de arrancar.
+// Si no querés login, se reemplaza por:  builder.Services.UseDB(builder.Configuration);
+builder.Services.UseAuth(builder.Configuration);
 
 
 // Add services to the container.
@@ -42,5 +43,8 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+// Mapea todas las clases que implementen IEndpoints. Sin esta llamada no se mapea ninguna.
+app.UseAPIEndpoints();
 
 app.Run();

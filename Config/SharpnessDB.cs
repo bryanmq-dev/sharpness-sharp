@@ -9,27 +9,36 @@ namespace sharpness_sharp.Config
     public static class SharpnessDB
     {
         /// <summary>
-        /// Registra ApplicationDbContext leyendo la sección "Database" de appsettings.json.
+        /// Registra el DbContext leyendo la sección "Database" de appsettings.json.
         /// Las variables de entorno la pisan sin tocar código: Database__Engine, Database__Password, etc.
         /// </summary>
-        public static IServiceCollection UseDB(this IServiceCollection services, IConfiguration configuration)
-            => services.UseDB(DatabaseParams.FromConfiguration(configuration));
+        public static IServiceCollection UseDB(this IServiceCollection services, IConfiguration configuration, bool conAuth = false)
+            => services.UseDB(DatabaseParams.FromConfiguration(configuration), conAuth);
 
         /// <summary>
-        /// Registra ApplicationDbContext con parámetros explícitos.
+        /// Registra el DbContext con parámetros explícitos.
         /// Útil para mostrar en clase qué está pasando; en un proyecto real preferí la sobrecarga
         /// que lee IConfiguration, así la contraseña no queda escrita en Program.cs.
         /// </summary>
-        public static IServiceCollection UseDB(this IServiceCollection services, DatabaseParams db)
+        /// <param name="conAuth">
+        /// Lo manda UseAuth(), y decide CUÁL de los dos contextos se registra. No se usan los dos
+        /// a la vez: la aplicación tiene uno solo, y el flag elige cuál.
+        ///   false → ApplicationDbContext      (DbContext pelado, para la plantilla sin login)
+        ///   true  → ApplicationAuthDbContext  (IdentityDbContext: Identity + las tablas de la app)
+        /// </param>
+        public static IServiceCollection UseDB(this IServiceCollection services, DatabaseParams db, bool conAuth = false)
         {
             // Si falta un dato revienta acá, con un mensaje claro, y no más tarde
             // con un error del driver que no dice qué falta.
             db.ToConnectionString();
 
-            // Se publica para que UseAuth() configure su DbContext con el MISMO motor.
             services.AddSingleton(db);
 
-            services.AddDbContext<ApplicationDbContext>(db.Configurar);
+            if (conAuth)
+                services.AddDbContext<ApplicationAuthDbContext>(db.Configurar);
+            else
+                services.AddDbContext<ApplicationDbContext>(db.Configurar);
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             return services;
