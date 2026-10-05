@@ -1,46 +1,23 @@
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using sharpness_sharp.Components;
-using sharpness_sharp.Components.Account;
-using sharpness_sharp.Data;
+using sharpness_sharp.Config;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Habilita IHttpClientFactory y el cliente scoped para todas las instancias de la aplicacion.
+builder.Services.UseHttpClient(builder.Configuration);
+
+// El motor y sus datos salen de la sección "Database" de appsettings.json.
+// Para cambiar de SQLite a Postgres no se toca una línea de C#: se cambia el JSON,
+// o se exporta Database__Engine=POSTGRESQL antes de arrancar.
+// UseAuth se encadena después: reutiliza el motor y la cadena que configuró UseDB.
+builder.Services.UseDB(builder.Configuration).UseAuth();
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<IdentityRedirectManager>();
-builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-    })
-    .AddIdentityCookies();
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
-
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddIdentityCore<ApplicationUser>(options =>
-    {
-        options.SignIn.RequireConfirmedAccount = true;
-        options.Stores.SchemaVersion = IdentitySchemaVersions.Version3;
-    })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

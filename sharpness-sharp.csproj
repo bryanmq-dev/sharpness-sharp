@@ -19,11 +19,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.8" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
   </ItemGroup>
 
-  <Target Name="TailwindCss" BeforeTargets="AssignTargetPaths"
-          Condition="'$(DesignTimeBuild)' != 'true' And '$(BuildingProject)' == 'true'">
+  <Target Name="TailwindCss" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true' And '$(BuildingProject)' == 'true'">
     <Exec Command="pnpm install" Condition="!Exists('node_modules')" />
     <Exec Command="pnpm exec tailwindcss -i ./Styles/tailwind.css -o ./wwwroot/app.css --minify" />
     <Exec Command="bash ./Styles/watch.sh" Condition="'$(OS)' != 'Windows_NT'" />
