@@ -1,17 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace sharpness_sharp.Data.Models
 {
     public class Producto
     {
-        public Guid Guid;
-        public string UrlImagen = null!;
-        public string Nombre = null!;
-        public decimal Precio;
-        public int Stock;
+        public Guid Guid { get; set; } = Guid.NewGuid();
+
+        [JsonPropertyName("imagen")]
+        public string UrlImagen { get; set; } = null!;
+
+        public string Nombre { get; set; } = null!;
+
+        public decimal Precio { get; set; }
+
+        public int Stock { get; set; }
 
         public Producto() { }
 
@@ -22,6 +24,5 @@ namespace sharpness_sharp.Data.Models
             Precio = price;
             Stock = stock;
         }
-
     }
 }
