@@ -14,44 +14,44 @@
 
 <PageTitle>Manage email</PageTitle>
 
-<h3>Manage email</h3>
+<ManagePanel Title="Email" Subtitle="Cambia la direccion asociada a tu cuenta.">
+    <StatusMessage Message="@message" />
 
-<StatusMessage Message="@message"/>
-<div class="-mx-2 flex flex-wrap">
-    <div class="w-full px-2 xl:w-1/2">
-        <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
-            <AntiforgeryToken />
-        </form>
-        <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <DataAnnotationsValidator />
-            <ValidationSummary  class="text-danger" role="alert" />
-            @if (isEmailConfirmed)
-            {
-                <div  class="mb-3 flex flex-wrap items-stretch">
-                    <input type="text" value="@email" id="email" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your email" disabled />
-                    <div  class="flex">
-                        <span  class="flex h-full items-center rounded-r border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm font-bold text-success">✓</span>
-                    </div>
-                    <label for="email" class="order-first mb-1 block w-full text-sm font-medium text-gray-700">Email</label>
-                </div>
-            }
-            else
-            {
-                <div class="mb-3 flex flex-col">
-                    <input type="text" value="@email" id="email" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Enter your email" disabled />
-                    <label for="email" class="order-first mb-1 block w-full text-sm font-medium text-gray-700">Email</label>
-                    <button type="submit" class="cursor-pointer border-0 bg-transparent p-0 text-sm font-medium text-blue-600 hover:underline" form="send-verification-form">Send verification email</button>
-                </div>
-            }
-            <div class="mb-3 flex flex-col">
-                <InputText @bind-Value="Input.NewEmail" id="Input.NewEmail" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" autocomplete="email" aria-required="true" placeholder="Enter a new email" />
-                <label for="Input.NewEmail" class="order-first mb-1 block w-full text-sm font-medium text-gray-700">New email</label>
-                <ValidationMessage For="() => Input.NewEmail"  class="text-danger" />
+    <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
+        <AntiforgeryToken />
+    </form>
+
+    <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post" class="space-y-5">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-sm text-red-600" role="alert" />
+
+        <div class="ui-field">
+            <label for="email" class="ui-label">Email actual</label>
+            <div class="relative">
+                <input type="text" value="@email" id="email" class="ui-input pr-24" disabled />
+                @if (isEmailConfirmed)
+                {
+                    <span class="absolute inset-y-0 right-3 flex items-center text-xs font-semibold text-emerald-600">Verificado</span>
+                }
             </div>
-            <button type="submit" class="w-full inline-block cursor-pointer rounded border text-center font-medium px-4 py-2 text-base border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Change email</button>
-        </EditForm>
-    </div>
-</div>
+            @if (!isEmailConfirmed)
+            {
+                <button type="submit" form="send-verification-form" class="self-start text-sm text-amber-700 underline-offset-4 transition duration-200 hover:underline">
+                    Enviar email de verificacion
+                </button>
+            }
+        </div>
+
+        <div class="ui-field">
+            <label for="Input.NewEmail" class="ui-label">Nuevo email</label>
+            <InputText @bind-Value="Input.NewEmail" id="Input.NewEmail" class="ui-input"
+                       autocomplete="email" aria-required="true" placeholder="nombre@ejemplo.com" />
+            <ValidationMessage For="() => Input.NewEmail" class="text-sm text-red-600" />
+        </div>
+
+        <button type="submit" class="ui-btn ui-btn-primary">Cambiar email</button>
+    </EditForm>
+</ManagePanel>
 
 @code {
     private string? message;

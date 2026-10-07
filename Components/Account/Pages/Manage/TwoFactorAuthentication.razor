@@ -10,64 +10,71 @@
 
 <PageTitle>Two-factor authentication (2FA)</PageTitle>
 
-<StatusMessage />
-<h3>Two-factor authentication (2FA)</h3>
-@if (canTrack)
-{
-    if (is2faEnabled)
+<ManagePanel Title="Verificacion en dos pasos" Subtitle="Una capa extra sobre tu contrasena.">
+    <StatusMessage />
+
+    @if (canTrack)
     {
-        if (recoveryCodesLeft == 0)
+        if (is2faEnabled)
         {
-            <div class="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                <strong>You have no recovery codes left.</strong>
-                <p>You must <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</p>
-            </div>
-        }
-        else if (recoveryCodesLeft == 1)
-        {
-            <div class="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                <strong>You have 1 recovery code left.</strong>
-                <p>You can <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
-            </div>
-        }
-        else if (recoveryCodesLeft <= 3)
-        {
-            <div class="rounded border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700">
-                <strong>You have @recoveryCodesLeft recovery codes left.</strong>
-                <p>You should <a href="Account/Manage/GenerateRecoveryCodes">generate a new set of recovery codes</a>.</p>
+            if (recoveryCodesLeft == 0)
+            {
+                <div class="ui-alert ui-alert-error">
+                    <strong>No te quedan codigos de recuperacion.</strong>
+                    <p class="mt-1">Genera <a href="Account/Manage/GenerateRecoveryCodes" class="ui-link">un juego nuevo</a> antes de poder usarlos.</p>
+                </div>
+            }
+            else if (recoveryCodesLeft == 1)
+            {
+                <div class="ui-alert ui-alert-error">
+                    <strong>Te queda 1 codigo de recuperacion.</strong>
+                    <p class="mt-1">Podes <a href="Account/Manage/GenerateRecoveryCodes" class="ui-link">generar un juego nuevo</a>.</p>
+                </div>
+            }
+            else if (recoveryCodesLeft <= 3)
+            {
+                <div class="ui-alert ui-alert-warn">
+                    <strong>Te quedan @recoveryCodesLeft codigos de recuperacion.</strong>
+                    <p class="mt-1">Conviene <a href="Account/Manage/GenerateRecoveryCodes" class="ui-link">generar un juego nuevo</a>.</p>
+                </div>
+            }
+
+            <div class="flex flex-wrap gap-2">
+                @if (isMachineRemembered)
+                {
+                    <form @formname="forget-browser" @onsubmit="OnSubmitForgetBrowserAsync" method="post">
+                        <AntiforgeryToken />
+                        <button type="submit" class="ui-btn ui-btn-soft ui-btn-sm">Olvidar este navegador</button>
+                    </form>
+                }
+                <a href="Account/Manage/Disable2fa" class="ui-btn ui-btn-soft ui-btn-sm">Desactivar 2FA</a>
+                <a href="Account/Manage/GenerateRecoveryCodes" class="ui-btn ui-btn-soft ui-btn-sm">Regenerar codigos</a>
             </div>
         }
 
-        if (isMachineRemembered)
-        {
-            <form style="display: inline-block" @formname="forget-browser" @onsubmit="OnSubmitForgetBrowserAsync" method="post">
-                <AntiforgeryToken />
-                <button type="submit" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Forget this browser</button>
-            </form>
-        }
-
-        <a href="Account/Manage/Disable2fa" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Disable 2FA</a>
-        <a href="Account/Manage/GenerateRecoveryCodes" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Reset recovery codes</a>
-    }
-
-    <h4>Authenticator app</h4>
-    @if (!hasAuthenticator)
-    {
-        <a href="Account/Manage/EnableAuthenticator" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Add authenticator app</a>
+        <div class="space-y-3 border-t border-stone-100 pt-5">
+            <h3 class="text-sm font-semibold text-stone-900">Aplicacion de autenticacion</h3>
+            <div class="flex flex-wrap gap-2">
+                @if (!hasAuthenticator)
+                {
+                    <a href="Account/Manage/EnableAuthenticator" class="ui-btn ui-btn-primary ui-btn-sm">Agregar app</a>
+                }
+                else
+                {
+                    <a href="Account/Manage/EnableAuthenticator" class="ui-btn ui-btn-soft ui-btn-sm">Reconfigurar app</a>
+                    <a href="Account/Manage/ResetAuthenticator" class="ui-btn ui-btn-soft ui-btn-sm">Restablecer clave</a>
+                }
+            </div>
+        </div>
     }
     else
     {
-        <a href="Account/Manage/EnableAuthenticator" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Set up authenticator app</a>
-        <a href="Account/Manage/ResetAuthenticator" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Reset authenticator app</a>
+        <div class="ui-alert ui-alert-error">
+            <strong>Falta aceptar la politica de privacidad y cookies.</strong>
+            <p class="mt-1">Tenes que aceptarla antes de activar la verificacion en dos pasos.</p>
+        </div>
     }
-}
-else
-{
-    <div class="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-        <strong>Privacy and cookie policy have not been accepted.</strong>
-        <p>You must accept the policy before you can enable two factor authentication.</p>
-    </div>
-}
+</ManagePanel>
 
 @code {
     private bool canTrack;

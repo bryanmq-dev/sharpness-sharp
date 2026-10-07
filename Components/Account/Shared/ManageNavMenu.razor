@@ -1,33 +1,19 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @using sharpness_sharp.Data
 
 @inject SignInManager<ApplicationUser> SignInManager
 
-<ul class="flex flex-col">
-    <li>
-        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage" Match="NavLinkMatch.All">Profile</NavLink>
-    </li>
-    <li>
-        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/Email">Email</NavLink>
-    </li>
-    <li>
-        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/ChangePassword">Password</NavLink>
-    </li>
+<ul class="flex flex-col gap-1">
+    <li><NavLink class="ui-nav-link" href="Account/Manage" Match="NavLinkMatch.All">Perfil</NavLink></li>
+    <li><NavLink class="ui-nav-link" href="Account/Manage/Email">Email</NavLink></li>
+    <li><NavLink class="ui-nav-link" href="Account/Manage/ChangePassword">Contrasena</NavLink></li>
     @if (hasExternalLogins)
     {
-        <li>
-            <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/ExternalLogins">External logins</NavLink>
-        </li>
+        <li><NavLink class="ui-nav-link" href="Account/Manage/ExternalLogins">Accesos externos</NavLink></li>
     }
-    <li>
-        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/TwoFactorAuthentication">Two-factor authentication</NavLink>
-    </li>
-    <li>
-        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/Passkeys">Passkeys</NavLink>
-    </li>
-    <li>
-        <NavLink class="block rounded px-3 py-1.5 [&.active]:bg-blue-600 [&.active]:text-white" href="Account/Manage/PersonalData">Personal data</NavLink>
-    </li>
+    <li><NavLink class="ui-nav-link" href="Account/Manage/TwoFactorAuthentication">Dos factores</NavLink></li>
+    <li><NavLink class="ui-nav-link" href="Account/Manage/Passkeys">Passkeys</NavLink></li>
+    <li><NavLink class="ui-nav-link" href="Account/Manage/PersonalData">Datos personales</NavLink></li>
 </ul>
 
 @code {

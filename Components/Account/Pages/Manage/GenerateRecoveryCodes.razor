@@ -15,25 +15,23 @@
 }
 else
 {
-    <h3>Generate two-factor authentication (2FA) recovery codes</h3>
-    <div class="rounded border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700" role="alert">
-        <p>
-            <strong>Put these codes in a safe place.</strong>
-        </p>
-        <p>
-            If you lose your device and don't have the recovery codes you will lose access to your account.
-        </p>
-        <p>
-            Generating new recovery codes does not change the keys used in authenticator apps. If you wish to change the key
-            used in an authenticator app you should <a href="Account/Manage/ResetAuthenticator">reset your authenticator keys.</a>
-        </p>
-    </div>
-    <div>
+    <ManagePanel Title="Generar codigos de recuperacion" Subtitle="Te sirven si perdes el dispositivo.">
+        <div class="ui-alert ui-alert-warn" role="alert">
+            <strong>Guardalos en un lugar seguro.</strong>
+            <p class="mt-1">
+                Si perdes el dispositivo y no tenes los codigos, perdes el acceso a la cuenta.
+            </p>
+            <p class="mt-1">
+                Generar codigos nuevos no cambia las claves de la app de autenticacion. Para eso,
+                <a href="Account/Manage/ResetAuthenticator" class="ui-link">restablece la clave</a>.
+            </p>
+        </div>
+
         <form @formname="generate-recovery-codes" @onsubmit="OnSubmitAsync" method="post">
             <AntiforgeryToken />
-            <button class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-red-600 bg-red-600 text-white hover:bg-red-700" type="submit">Generate Recovery Codes</button>
+            <button class="ui-btn ui-btn-danger" type="submit">Generar codigos</button>
         </form>
-    </div>
+    </ManagePanel>
 }
 
 @code {

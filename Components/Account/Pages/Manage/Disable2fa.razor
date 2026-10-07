@@ -9,25 +9,22 @@
 
 <PageTitle>Disable two-factor authentication (2FA)</PageTitle>
 
-<StatusMessage />
-<h3>Disable two-factor authentication (2FA)</h3>
+<ManagePanel Title="Desactivar 2FA" Subtitle="Tu cuenta queda protegida solo por la contrasena.">
+    <StatusMessage />
 
-<div class="rounded border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700" role="alert">
-    <p>
-        <strong>This action only disables 2FA.</strong>
-    </p>
-    <p>
-        Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a href="Account/Manage/ResetAuthenticator">reset your authenticator keys.</a>
-    </p>
-</div>
+    <div class="ui-alert ui-alert-warn" role="alert">
+        <strong>Esto solo desactiva la verificacion en dos pasos.</strong>
+        <p class="mt-1">
+            Las claves de la app de autenticacion no cambian. Si queres cambiarlas,
+            <a href="Account/Manage/ResetAuthenticator" class="ui-link">restablece la clave</a>.
+        </p>
+    </div>
 
-<div>
     <form @formname="disable-2fa" @onsubmit="OnSubmitAsync" method="post">
         <AntiforgeryToken />
-        <button class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-red-600 bg-red-600 text-white hover:bg-red-700" type="submit">Disable 2FA</button>
+        <button class="ui-btn ui-btn-danger" type="submit">Desactivar 2FA</button>
     </form>
-</div>
+</ManagePanel>
 
 @code {
     private ApplicationUser? user;

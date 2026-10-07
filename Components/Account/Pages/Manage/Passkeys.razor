@@ -11,53 +11,54 @@
 
 <PageTitle>Manage your passkeys</PageTitle>
 
-<h3>Manage your passkeys</h3>
+<ManagePanel Title="Passkeys" Subtitle="Entra sin contrasena desde tus dispositivos.">
+    <StatusMessage />
 
-<StatusMessage />
-
-@if (currentPasskeys is { Count: > 0 })
-{
-    <table class="w-full border-collapse text-left [&_td]:border-b [&_td]:p-2 [&_th]:border-b [&_th]:p-2">
-        <tbody>
-            @foreach (var passkey in currentPasskeys)
-            {
-                <tr>
-                    <td>@(passkey.Name ?? "Unnamed passkey")</td>
-                    <td>
-                        @{
-                            var credentialId = Base64Url.EncodeToString(passkey.CredentialId);
-                        }
-                        <form @formname="@($"update-passkey-{credentialId}")" @onsubmit="UpdatePasskey" method="post">
-                            <AntiforgeryToken />
-                            <div>
-                                <input type="hidden" name="CredentialId" value="@credentialId" />
-                                <button type="submit" name="Action" value="rename" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700" title="Rename this passkey">Rename</button>
-                                <button type="submit" name="Action" value="delete" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-red-600 bg-red-600 text-white hover:bg-red-700" title="Remove this passkey from your account">Delete</button>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No passkeys are registered.</p>
-}
-
-<form @formname="add-passkey" @onsubmit="AddPasskey" method="post">
-    <AntiforgeryToken />
-    @if (currentPasskeys is { Count: >= MaxPasskeyCount })
+    @if (currentPasskeys is { Count: > 0 })
     {
-        <p  class="text-danger">You have reached the maximum number of allowed passkeys. Please delete one before adding a new one.</p>
+        <table class="ui-table">
+            <tbody>
+                @foreach (var passkey in currentPasskeys)
+                {
+                    <tr>
+                        <td class="font-medium text-stone-900">@(passkey.Name ?? "Passkey sin nombre")</td>
+                        <td class="text-right">
+                            @{
+                                var credentialId = Base64Url.EncodeToString(passkey.CredentialId);
+                            }
+                            <form @formname="@($"update-passkey-{credentialId}")" @onsubmit="UpdatePasskey" method="post" class="flex justify-end gap-2">
+                                <AntiforgeryToken />
+                                <input type="hidden" name="CredentialId" value="@credentialId" />
+                                <button type="submit" name="Action" value="rename" class="ui-btn ui-btn-soft ui-btn-sm" title="Renombrar esta passkey">Renombrar</button>
+                                <button type="submit" name="Action" value="delete" class="ui-btn ui-btn-danger ui-btn-sm" title="Quitar esta passkey de tu cuenta">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     }
     else
     {
-        <PasskeySubmit Operation="PasskeyOperation.Create" Name="Input" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Add a new passkey</PasskeySubmit>
+        <p class="text-sm text-stone-500">Todavia no registraste ninguna passkey.</p>
     }
 
-</form>
+    <form @formname="add-passkey" @onsubmit="AddPasskey" method="post">
+        <AntiforgeryToken />
+        @if (currentPasskeys is { Count: >= MaxPasskeyCount })
+        {
+            <div class="ui-alert ui-alert-warn">
+                Llegaste al maximo de passkeys permitidas. Elimina una antes de agregar otra.
+            </div>
+        }
+        else
+        {
+            <PasskeySubmit Operation="PasskeyOperation.Create" Name="Input" class="ui-btn ui-btn-primary">
+                Agregar una passkey
+            </PasskeySubmit>
+        }
+    </form>
+</ManagePanel>
 
 @code {
     private const int MaxPasskeyCount = 100;

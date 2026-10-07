@@ -8,24 +8,25 @@
 
 <PageTitle>Personal Data</PageTitle>
 
-<StatusMessage />
-<h3>Personal Data</h3>
+<ManagePanel Title="Datos personales" Subtitle="Descarga o elimina la informacion de tu cuenta.">
+    <StatusMessage />
 
-<div class="-mx-2 flex flex-wrap">
-    <div class="w-full px-2 md:w-1/2">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
-        <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-        </p>
+    <p class="text-sm text-stone-600">
+        Tu cuenta guarda los datos que nos diste. Desde aca podes bajarlos o borrarlos.
+    </p>
+
+    <div class="ui-alert ui-alert-warn">
+        <strong>Borrar estos datos elimina tu cuenta de forma permanente.</strong> No se puede deshacer.
+    </div>
+
+    <div class="flex flex-wrap gap-2">
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken />
-            <button class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700" type="submit">Download</button>
+            <button class="ui-btn ui-btn-soft" type="submit">Descargar mis datos</button>
         </form>
-        <p>
-            <a href="Account/Manage/DeletePersonalData" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-red-600 bg-red-600 text-white hover:bg-red-700">Delete</a>
-        </p>
+        <a href="Account/Manage/DeletePersonalData" class="ui-btn ui-btn-danger">Eliminar cuenta</a>
     </div>
-</div>
+</ManagePanel>
 
 @code {
     [CascadingParameter]

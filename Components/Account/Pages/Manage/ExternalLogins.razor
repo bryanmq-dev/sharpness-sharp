@@ -11,56 +11,56 @@
 
 <PageTitle>Manage your external logins</PageTitle>
 
-<StatusMessage />
-@if (currentLogins?.Count > 0)
-{
-    <h3>Registered Logins</h3>
-    <table class="w-full border-collapse text-left [&_td]:border-b [&_td]:p-2 [&_th]:border-b [&_th]:p-2">
-        <tbody>
-            @foreach (var login in currentLogins)
-            {
-                <tr>
-                    <td>@login.ProviderDisplayName</td>
-                    <td>
-                        @if (showRemoveButton)
-                        {
-                            <form @formname="@($"remove-login-{login.LoginProvider}")" @onsubmit="OnSubmitAsync" method="post">
-                                <AntiforgeryToken />
-                                <div>
+<ManagePanel Title="Accesos externos" Subtitle="Proveedores vinculados a tu cuenta.">
+    <StatusMessage />
+
+    @if (currentLogins?.Count > 0)
+    {
+        <table class="ui-table">
+            <tbody>
+                @foreach (var login in currentLogins)
+                {
+                    <tr>
+                        <td class="font-medium text-stone-900">@login.ProviderDisplayName</td>
+                        <td class="text-right">
+                            @if (showRemoveButton)
+                            {
+                                <form @formname="@($"remove-login-{login.LoginProvider}")" @onsubmit="OnSubmitAsync" method="post">
+                                    <AntiforgeryToken />
                                     <input type="hidden" name="@nameof(LoginProvider)" value="@login.LoginProvider" />
                                     <input type="hidden" name="@nameof(ProviderKey)" value="@login.ProviderKey" />
-                                    <button type="submit" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700" title="Remove this @login.ProviderDisplayName login from your account">Remove</button>
-                                </div>
-                            </form>
-                        }
-                        else
-                        {
-                            @: &nbsp;
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-@if (otherLogins?.Count > 0)
-{
-    <h4>Add another service to log in.</h4>
-    <hr />
-    <form action="Account/Manage/LinkExternalLogin" method="post">
-        <AntiforgeryToken />
-        <div>
-            <p>
+                                    <button type="submit" class="ui-btn ui-btn-soft ui-btn-sm"
+                                            title="Quitar @login.ProviderDisplayName de tu cuenta">Quitar</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-sm text-stone-500">No tenes proveedores vinculados.</p>
+    }
+
+    @if (otherLogins?.Count > 0)
+    {
+        <div class="space-y-3 border-t border-stone-100 pt-5">
+            <h3 class="text-sm font-semibold text-stone-900">Vincular otro servicio</h3>
+            <form action="Account/Manage/LinkExternalLogin" method="post" class="flex flex-wrap gap-2">
+                <AntiforgeryToken />
                 @foreach (var provider in otherLogins)
                 {
-                    <button type="submit" class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-blue-600 bg-blue-600 text-white hover:bg-blue-700" name="Provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                    <button type="submit" name="Provider" value="@provider.Name" class="ui-btn ui-btn-soft ui-btn-sm"
+                            title="Vincular tu cuenta de @provider.DisplayName">
                         @provider.DisplayName
                     </button>
                 }
-            </p>
+            </form>
         </div>
-    </form>
-}
+    }
+</ManagePanel>
 
 @code {
     public const string LinkLoginCallbackAction = "LinkLoginCallback";

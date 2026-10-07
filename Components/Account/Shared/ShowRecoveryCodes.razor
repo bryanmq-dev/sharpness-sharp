@@ -1,23 +1,18 @@
-﻿<StatusMessage Message="@StatusMessage" />
-<h3>Recovery codes</h3>
-<div class="rounded border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700" role="alert">
-    <p>
-        <strong>Put these codes in a safe place.</strong>
-    </p>
-    <p>
-        If you lose your device and don't have the recovery codes you will lose access to your account.
-    </p>
-</div>
-<div class="-mx-2 flex flex-wrap">
-    <div class="w-full px-2 md:w-full">
+﻿<ManagePanel Title="Codigos de recuperacion" Subtitle="Cada codigo sirve una sola vez.">
+    <StatusMessage Message="@StatusMessage" />
+
+    <div class="ui-alert ui-alert-warn" role="alert">
+        <strong>Guardalos en un lugar seguro.</strong>
+        <p class="mt-1">Si perdes el dispositivo y no tenes estos codigos, perdes el acceso a la cuenta.</p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
         @foreach (var recoveryCode in RecoveryCodes)
         {
-            <div>
-                <code class="font-mono">@recoveryCode</code>
-            </div>
+            <code class="rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-center font-mono text-sm tracking-wider text-stone-800">@recoveryCode</code>
         }
     </div>
-</div>
+</ManagePanel>
 
 @code {
     [Parameter]

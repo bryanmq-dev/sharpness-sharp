@@ -10,23 +10,22 @@
 
 <PageTitle>Reset authenticator key</PageTitle>
 
-<StatusMessage />
-<h3>Reset authenticator key</h3>
-<div class="rounded border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700" role="alert">
-    <p>
-        <strong>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</strong>
-    </p>
-    <p>
-        This process disables 2FA until you verify your authenticator app.
-        If you do not complete your authenticator app configuration you may lose access to your account.
-    </p>
-</div>
-<div>
+<ManagePanel Title="Restablecer clave" Subtitle="Vas a tener que volver a configurar la app.">
+    <StatusMessage />
+
+    <div class="ui-alert ui-alert-warn" role="alert">
+        <strong>Tu app de autenticacion deja de funcionar hasta que la reconfigures.</strong>
+        <p class="mt-1">
+            El proceso desactiva 2FA hasta que verifiques la app de nuevo. Si no lo completas
+            podes perder el acceso a la cuenta.
+        </p>
+    </div>
+
     <form @formname="reset-authenticator" @onsubmit="OnSubmitAsync" method="post">
         <AntiforgeryToken />
-        <button class="inline-block cursor-pointer rounded border text-center text-sm font-medium px-3 py-1.5 border-red-600 bg-red-600 text-white hover:bg-red-700" type="submit">Reset authenticator key</button>
+        <button class="ui-btn ui-btn-danger" type="submit">Restablecer clave</button>
     </form>
-</div>
+</ManagePanel>
 
 @code {
     [CascadingParameter]

@@ -8,27 +8,23 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 
-<EditForm Model="Input" OnValidSubmit="Rename" FormName="rename-passkey" method="post">
-    <DataAnnotationsValidator />
-    @if (passkey?.Name is { } name)
-    {
-        <h4>Enter a new name for your "@name" passkey</h4>
-    }
-    else
-    {
-        <h4>Enter a name for your passkey</h4>
-    }
-    <hr />
-    <ValidationSummary  class="text-danger" role="alert" />
-    <div class="mb-3 flex flex-col">
-        <InputText @bind-Value="Input.Name" id="Input.Name" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" aria-required="true" placeholder="My passkey" />
-        <label for="Input.Name" class="order-first mb-1 block w-full text-sm font-medium text-gray-700">Passkey name</label>
-        <ValidationMessage For="() => Input.Name"  class="text-danger" />
-    </div>
-    <div>
-        <button type="submit" class="w-full inline-block cursor-pointer rounded border text-center font-medium px-4 py-2 text-base border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Continue</button>
-    </div>
-</EditForm>
+<PageTitle>Rename passkey</PageTitle>
+
+<ManagePanel Title="Renombrar passkey" Subtitle="@(passkey?.Name is { } n ? $"Actualmente se llama \"{n}\"." : "Elegi un nombre para reconocerla.")">
+    <EditForm Model="Input" OnValidSubmit="Rename" FormName="rename-passkey" method="post" class="space-y-5">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-sm text-red-600" role="alert" />
+
+        <div class="ui-field">
+            <label for="Input.Name" class="ui-label">Nombre</label>
+            <InputText @bind-Value="Input.Name" id="Input.Name" class="ui-input"
+                       aria-required="true" placeholder="Mi telefono" />
+            <ValidationMessage For="() => Input.Name" class="text-sm text-red-600" />
+        </div>
+
+        <button type="submit" class="ui-btn ui-btn-primary">Continuar</button>
+    </EditForm>
+</ManagePanel>
 
 @code {
     private ApplicationUser? user;

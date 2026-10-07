@@ -1,16 +1,18 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @layout sharpness_sharp.Components.Layout.MainLayout
 
-<h1>Manage your account</h1>
+<div class="mx-auto max-w-5xl py-8">
+    <header class="mb-8">
+        <h1 class="text-2xl font-semibold tracking-tight text-stone-900">Mi cuenta</h1>
+        <p class="mt-1 text-sm text-stone-500">Datos de acceso, seguridad y privacidad.</p>
+    </header>
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="-mx-2 flex flex-wrap">
-        <div class="w-full px-2 lg:w-1/4">
+    <div class="flex flex-col gap-8 lg:flex-row">
+        <nav class="lg:w-56 lg:shrink-0">
             <ManageNavMenu />
-        </div>
-        <div class="w-full px-2 lg:w-3/4">
+        </nav>
+
+        <div class="min-w-0 flex-1">
             @Body
         </div>
     </div>

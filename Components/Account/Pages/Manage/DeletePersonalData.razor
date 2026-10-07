@@ -11,31 +11,30 @@
 
 <PageTitle>Delete Personal Data</PageTitle>
 
-<StatusMessage Message="@message" />
+<ManagePanel Title="Eliminar cuenta" Subtitle="Esta accion no se puede deshacer.">
+    <StatusMessage Message="@message" />
 
-<h3>Delete Personal Data</h3>
+    <div class="ui-alert ui-alert-warn" role="alert">
+        <strong>Borrar estos datos elimina tu cuenta de forma permanente</strong>, sin posibilidad de recuperarla.
+    </div>
 
-<div class="rounded border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm text-yellow-700" role="alert">
-    <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-    </p>
-</div>
-
-<div>
-    <EditForm Model="Input" FormName="delete-user" OnValidSubmit="OnValidSubmitAsync" method="post">
+    <EditForm Model="Input" FormName="delete-user" OnValidSubmit="OnValidSubmitAsync" method="post" class="space-y-5">
         <DataAnnotationsValidator />
-        <ValidationSummary  class="text-danger" role="alert" />
+        <ValidationSummary class="text-sm text-red-600" role="alert" />
+
         @if (requirePassword)
         {
-            <div class="mb-3 flex flex-col">
-                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" autocomplete="current-password" aria-required="true" placeholder="Please enter your password." />
-                <label for="Input.Password" class="order-first mb-1 block w-full text-sm font-medium text-gray-700">Password</label>
-                <ValidationMessage For="() => Input.Password"  class="text-danger" />
+            <div class="ui-field">
+                <label for="Input.Password" class="ui-label">Confirma tu contrasena</label>
+                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="ui-input"
+                           autocomplete="current-password" aria-required="true" placeholder="........" />
+                <ValidationMessage For="() => Input.Password" class="text-sm text-red-600" />
             </div>
         }
-        <button class="w-full inline-block cursor-pointer rounded border text-center font-medium px-4 py-2 text-base border-red-600 bg-red-600 text-white hover:bg-red-700" type="submit">Delete data and close my account</button>
+
+        <button class="ui-btn ui-btn-danger" type="submit">Eliminar mis datos y cerrar la cuenta</button>
     </EditForm>
-</div>
+</ManagePanel>
 
 @code {
     private string? message;
