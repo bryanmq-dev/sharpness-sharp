@@ -134,6 +134,44 @@ Lo que ya viene andando, sin escribir una línea: registro, confirmación de cue
 2FA, passkeys, recuperación de contraseña y exportación de datos personales — las páginas
 están en `Components/Account/`.
 
+### Seed inicial
+
+```csharp
+// Program.cs, despues de builder.Build()
+await app.SeedAuth();
+```
+
+En cada arranque, y de forma idempotente:
+
+1. aplica las migraciones pendientes;
+2. crea los roles de `Auth:Roles` que falten — `AdminRole` siempre entra;
+3. siembra el usuario administrador y lo agrega a su rol.
+
+```json
+"Auth": {
+  "AdminRole": "Admin",
+  "Roles": [ "Admin" ],
+  "AdminEmail": "",
+  "AdminPassword": ""
+}
+```
+
+En desarrollo, `appsettings.Development.json` ya trae `admin@sharpness.local` /
+`Admin123!`, así que un clon limpio se corre y se entra sin configurar nada.
+
+> **La contraseña de produccion no va al repositorio.** Se pasa por `Auth__AdminPassword`
+> o `dotnet user-secrets set "Auth:AdminPassword" "..."`. Si `AdminEmail` o `AdminPassword`
+> quedan vacios, los roles se crean igual y el usuario se saltea con un warning en el log.
+
+Para las Clases 4 y 5, los roles nuevos se agregan **sin tocar C#**:
+
+```json
+"Roles": [ "Admin", "Cliente", "ClienteVIP" ]
+```
+
+El admin sembrado queda con `EmailConfirmed = true` a proposito: `UseAuth` deja
+`RequireConfirmedAccount` en `true`, y no hay mail que confirmar.
+
 ### Migraciones
 
 El contexto de Identity es el dueño de las migraciones, así que **hay que nombrarlo**:
@@ -143,7 +181,8 @@ dotnet ef migrations add AgregarProductos --context ApplicationAuthDbContext
 dotnet ef database update --context ApplicationAuthDbContext
 ```
 
-La migración inicial `CreateIdentitySchema` ya crea las tablas `AspNet*`.
+La migración inicial `CreateIdentitySchema` ya crea las tablas `AspNet*`. No hace falta
+aplicarlas a mano antes del primer arranque: `SeedAuth()` lo hace solo.
 
 ---
 

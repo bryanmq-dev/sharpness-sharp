@@ -1,6 +1,6 @@
-﻿@implements IDisposable
+﻿@using Microsoft.AspNetCore.Mvc
 
-@inject NavigationManager NavigationManager
+
 
 <div class="flex h-14 items-center px-4 text-lg font-semibold">
     <a href="">sharpness-sharp</a>
@@ -29,68 +29,8 @@
             </NavLink>
         </div>
 
-        <div>
-            <NavLink
-                class="block rounded px-3 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white"
-                href="auth"> Auth Required
-            </NavLink>
-        </div>
-
-        <AuthorizeView>
-            <Authorized>
-                <div>
-                    <NavLink
-                        class="block rounded px-3 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white"
-                        href="Account/Manage"> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-                <div>
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit"
-                                class="w-full cursor-pointer text-left block rounded px-3 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white">
-                            Logout
-                        </button>
-                    </form>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div>
-                    <NavLink
-                        class="block rounded px-3 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white"
-                        href="Account/Register"> Register
-                    </NavLink>
-                </div>
-                <div>
-                    <NavLink
-                        class="block rounded px-3 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white"
-                        href="Account/Login"> Login
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
     </nav>
 </div>
 
-@code {
-    private string? currentUrl;
 
-    protected override void OnInitialized()
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        NavigationManager.LocationChanged += OnLocationChanged;
-    }
-
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
-        StateHasChanged();
-    }
-
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
-    }
-}
 

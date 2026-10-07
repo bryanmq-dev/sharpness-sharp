@@ -1,23 +1,70 @@
 @inherits LayoutComponentBase
+@implements IDisposable
+@inject NavigationManager NavigationManager
 
 <div class="flex min-h-screen flex-col md:flex-row">
     <aside class="bg-slate-800 text-white md:w-64 md:shrink-0">
         <NavMenu />
     </aside>
 
+
+
     <main class="flex-1">
         <div class="flex h-14 items-center justify-end border-b border-gray-200 bg-gray-50 px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank" class="hover:underline">About</a>
+            <AuthorizeView>
+                <NotAuthorized>
+                    <div class="ui-btn ui-btn-primary">
+                        <NavLink href="Account/Login">Iniciar Sesion</NavLink>
+                    </div>
+                </NotAuthorized>
+                <Authorized>
+                    <div class="ui-btn-primary ui-btn mx-2">
+                        <NavLink href="Account/Manage"> @context.User.Identity?.Name
+                        </NavLink>
+                    </div>
+                    <div class="ui-btn-primary ui-btn mx-2">
+                        <form action="Account/Logout" method="post">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                            <button type="submit">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
         </div>
 
-        <article class="px-4 pt-4">
+        <article class=" px-4 pt-4">
             @Body
         </article>
     </main>
 </div>
 
-<div id="blazor-error-ui" data-nosnippet class="fixed inset-x-0 bottom-0 z-50 hidden bg-yellow-100 px-5 py-2 shadow-[0_-1px_2px_rgba(0,0,0,0.2)]">
+<div id="blazor-error-ui" data-nosnippet
+     class="fixed inset-x-0 bottom-0 z-50 hidden bg-yellow-100 px-5 py-2 shadow-[0_-1px_2px_rgba(0,0,0,0.2)]">
     An unhandled error has occurred.
     <a href="." class="reload underline">Reload</a>
     <span class="dismiss absolute right-3 top-2 cursor-pointer">🗙</span>
 </div>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
