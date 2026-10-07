@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +12,6 @@ namespace sharpness_sharp.Config
         {
             Assembly currentAssembly = Assembly.GetExecutingAssembly();
             var endpointClasses = currentAssembly.GetTypes().Where(@class => @class is { IsClass: true, IsAbstract: false } && typeof(IEndpoints).IsAssignableFrom(@class));
-
 
             foreach (var endpointClass in endpointClasses)
             {

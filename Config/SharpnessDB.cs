@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -17,9 +17,14 @@ namespace sharpness_sharp.Config
 
         /// <summary>
         /// Registra el DbContext con parámetros explícitos.
-        /// Útil para mostrar en clase qué está pasando; en un proyecto real preferí la sobrecarga
-        /// que lee IConfiguration, así la contraseña no queda escrita en Program.cs.
+        /// Preferí la sobrecarga que lee IConfiguration, así la contraseña no queda escrita
+        /// en Program.cs.
         /// </summary>
+        /// <remarks>
+        /// La cadena se arma antes de registrar nada para que un dato faltante falle al
+        /// arrancar, con el nombre de la clave, en vez de fallar más tarde con un error
+        /// del driver que no dice qué falta.
+        /// </remarks>
         /// <param name="conAuth">
         /// Lo manda UseAuth(), y decide CUÁL de los dos contextos se registra. No se usan los dos
         /// a la vez: la aplicación tiene uno solo, y el flag elige cuál.
@@ -28,8 +33,6 @@ namespace sharpness_sharp.Config
         /// </param>
         public static IServiceCollection UseDB(this IServiceCollection services, DatabaseParams db, bool conAuth = false)
         {
-            // Si falta un dato revienta acá, con un mensaje claro, y no más tarde
-            // con un error del driver que no dice qué falta.
             db.ToConnectionString();
 
             services.AddSingleton(db);
@@ -67,7 +70,6 @@ namespace sharpness_sharp.Config
         /// </summary>
         public bool TrustServerCertificate { get; set; }
 
-        // Sin parámetros: lo necesita el binder de IConfiguration.
         public DatabaseParams() { }
 
         /// <summary>SQLite: sólo hace falta dónde vive el archivo.</summary>
@@ -145,7 +147,6 @@ namespace sharpness_sharp.Config
 
             DBEngine.SQLSERVER => new SqlConnectionStringBuilder
             {
-                // SQL Server no usa un campo Port aparte: va pegado al host con una coma.
                 DataSource = Port is null
                     ? Requerido(Host, nameof(Host))
                     : $"{Requerido(Host, nameof(Host))},{Port}",
