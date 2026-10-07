@@ -1,0 +1,38 @@
+﻿<div class="ui-card">
+    <div class="mb-6 space-y-1.5">
+        <h1 class="text-xl font-semibold tracking-tight text-stone-900">@Title</h1>
+        @if (!string.IsNullOrWhiteSpace(Subtitle))
+        {
+            <p class="text-sm text-stone-500">@Subtitle</p>
+        }
+    </div>
+
+    <div class="space-y-5">
+        @ChildContent
+    </div>
+</div>
+
+@if (Footer is not null)
+{
+    <div class="mt-6 space-y-2 text-center text-sm text-stone-500">
+        @Footer
+    </div>
+}
+
+@code {
+    /// <summary>Encabezado de la tarjeta.</summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = default!;
+
+    /// <summary>Línea de apoyo bajo el título. Opcional.</summary>
+    [Parameter]
+    public string? Subtitle { get; set; }
+
+    /// <summary>Contenido de la tarjeta: formulario, mensajes o texto.</summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Enlaces que van por fuera de la tarjeta, al pie. Opcional.</summary>
+    [Parameter]
+    public RenderFragment? Footer { get; set; }
+}

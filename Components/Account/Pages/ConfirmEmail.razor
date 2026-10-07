@@ -10,8 +10,15 @@
 
 <PageTitle>Confirm email</PageTitle>
 
-<h1>Confirm email</h1>
-<StatusMessage Message="@statusMessage" />
+<AuthCard Title="Confirmacion de email">
+    <ChildContent>
+        <StatusMessage Message="@statusMessage" />
+    </ChildContent>
+
+    <Footer>
+        <p><a href="Account/Login" class="ui-link">Ir a iniciar sesion</a></p>
+    </Footer>
+</AuthCard>
 
 @code {
     private string? statusMessage;

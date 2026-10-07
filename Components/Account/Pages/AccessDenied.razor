@@ -2,7 +2,15 @@
 
 <PageTitle>Access denied</PageTitle>
 
-<header>
-    <h1  class="text-danger">Access denied</h1>
-    <p  class="text-danger">You do not have access to this resource.</p>
-</header>
+<AuthCard Title="Acceso denegado" Subtitle="No tenes permisos para ver este recurso.">
+    <ChildContent>
+        <p class="text-sm text-stone-600" role="alert">
+            Si creias que si, pedile a un administrador que revise tu rol.
+        </p>
+    </ChildContent>
+
+    <Footer>
+        <p><a href="/" class="ui-link">Ir al inicio</a></p>
+    </Footer>
+</AuthCard>
+

@@ -12,21 +12,27 @@
 
 <PageTitle>Register confirmation</PageTitle>
 
-<h1>Register confirmation</h1>
+<AuthCard Title="Revisa tu correo" Subtitle="Te enviamos un enlace para confirmar la cuenta.">
+    <ChildContent>
+        <StatusMessage Message="@statusMessage" />
 
-<StatusMessage Message="@statusMessage" />
+        @if (emailConfirmationLink is not null)
+        {
+            <div class="ui-alert ui-alert-warn space-y-3">
+                <p>Esta aplicacion no tiene un servidor de correo configurado, asi que el enlace se muestra aca.</p>
+                <a href="@emailConfirmationLink" class="ui-link">Confirmar mi cuenta</a>
+            </div>
+        }
+        else
+        {
+            <p class="text-sm text-stone-600" role="alert">Abri el enlace que te mandamos para activar la cuenta.</p>
+        }
+    </ChildContent>
 
-@if (emailConfirmationLink is not null)
-{
-    <p>
-        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-        Normally this would be emailed: <a href="@emailConfirmationLink">Click here to confirm your account</a>
-    </p>
-}
-else
-{
-    <p role="alert">Please check your email to confirm your account.</p>
-}
+    <Footer>
+        <p><a href="Account/Login" class="ui-link">Volver a iniciar sesion</a></p>
+    </Footer>
+</AuthCard>
 
 @code {
     private string? emailConfirmationLink;

@@ -17,42 +17,45 @@
 
 <PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
-
-<div class="-mx-2 flex flex-wrap">
-    <div class="w-full px-2 lg:w-1/2">
+<AuthCard Title="Crear cuenta" Subtitle="Un paso y ya estas adentro.">
+    <ChildContent>
         <StatusMessage Message="@Message" />
-        <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
+
+        <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register" class="space-y-5">
             <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
-            <ValidationSummary  class="text-danger" role="alert" />
-            <div class="mb-3 flex flex-col">
-                <InputText @bind-Value="Input.Email" id="Input.Email" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="Input.Email">Email</label>
-                <ValidationMessage For="() => Input.Email"  class="text-danger" />
+            <ValidationSummary class="text-sm text-red-600" role="alert" />
+
+            <div class="ui-field">
+                <label for="Input.Email" class="ui-label">Email</label>
+                <InputText @bind-Value="Input.Email" id="Input.Email" class="ui-input"
+                           autocomplete="username" aria-required="true" placeholder="nombre@ejemplo.com" />
+                <ValidationMessage For="() => Input.Email" class="text-sm text-red-600" />
             </div>
-            <div class="mb-3 flex flex-col">
-                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.Password">Password</label>
-                <ValidationMessage For="() => Input.Password"  class="text-danger" />
+
+            <div class="ui-field">
+                <label for="Input.Password" class="ui-label">Contrasena</label>
+                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="ui-input"
+                           autocomplete="new-password" aria-required="true" placeholder="........" />
+                <ValidationMessage For="() => Input.Password" class="text-sm text-red-600" />
             </div>
-            <div class="mb-3 flex flex-col">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.ConfirmPassword">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword"  class="text-danger" />
+
+            <div class="ui-field">
+                <label for="Input.ConfirmPassword" class="ui-label">Confirmar contrasena</label>
+                <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="ui-input"
+                           autocomplete="new-password" aria-required="true" placeholder="........" />
+                <ValidationMessage For="() => Input.ConfirmPassword" class="text-sm text-red-600" />
             </div>
-            <button type="submit" class="w-full inline-block cursor-pointer rounded border text-center font-medium px-4 py-2 text-base border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Register</button>
+
+            <button type="submit" class="ui-btn ui-btn-primary ui-btn-block">Crear cuenta</button>
         </EditForm>
-    </div>
-    <div class="w-full px-2 lg:ml-[16.667%] lg:w-1/3">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
-</div>
+
+        <ExternalLoginPicker />
+    </ChildContent>
+
+    <Footer>
+        <p>Ya tenes cuenta? <a href="Account/Login" class="ui-link">Iniciar sesion</a></p>
+    </Footer>
+</AuthCard>
 
 @code {
     private IEnumerable<IdentityError>? identityErrors;

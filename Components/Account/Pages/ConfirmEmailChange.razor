@@ -11,9 +11,15 @@
 
 <PageTitle>Confirm email change</PageTitle>
 
-<h1>Confirm email change</h1>
+<AuthCard Title="Cambio de email">
+    <ChildContent>
+        <StatusMessage Message="@message" />
+    </ChildContent>
 
-<StatusMessage Message="@message" />
+    <Footer>
+        <p><a href="Account/Login" class="ui-link">Ir a iniciar sesion</a></p>
+    </Footer>
+</AuthCard>
 
 @code {
     private string? message;

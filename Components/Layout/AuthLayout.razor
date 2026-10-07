@@ -1,0 +1,25 @@
+@inherits LayoutComponentBase
+
+<div class="min-h-screen bg-gradient-to-br from-stone-50 via-amber-50/60 to-stone-100">
+    <main class="flex min-h-screen flex-col items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md">
+            <a href="/" class="mb-8 flex items-center justify-center gap-2.5 transition duration-200 hover:opacity-70">
+                <img src="favicon.png" alt="Blazor" class="h-9 w-9" />
+                <span class="text-lg font-semibold tracking-tight text-stone-900">Sharpness Sharp</span>
+            </a>
+
+            @Body
+
+            <p class="mt-8 text-center text-xs text-stone-400">
+                <a href="/" class="transition duration-200 hover:text-stone-600">&larr; Volver al inicio</a>
+            </p>
+        </div>
+    </main>
+</div>
+
+<div id="blazor-error-ui" data-nosnippet
+     class="fixed inset-x-0 bottom-0 z-50 hidden bg-yellow-100 px-5 py-2 shadow-[0_-1px_2px_rgba(0,0,0,0.2)]">
+    An unhandled error has occurred.
+    <a href="." class="reload underline">Reload</a>
+    <span class="dismiss absolute right-3 top-2 cursor-pointer">&#128937;</span>
+</div>

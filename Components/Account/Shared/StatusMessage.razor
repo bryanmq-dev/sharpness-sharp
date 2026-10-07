@@ -1,7 +1,7 @@
 ﻿@if (!string.IsNullOrEmpty(DisplayMessage))
 {
-    var statusMessageClass = DisplayMessage.StartsWith("Error") ? "border-red-200 bg-red-50 text-red-700" : "border-green-200 bg-green-50 text-green-700";
-    <div class="rounded border px-4 py-3 text-sm @statusMessageClass" role="alert">
+    var estilo = DisplayMessage.StartsWith("Error") ? "ui-alert-error" : "ui-alert-ok";
+    <div class="ui-alert @estilo" role="alert">
         @DisplayMessage
     </div>
 }

@@ -11,27 +11,33 @@
 
 <PageTitle>Recovery code verification</PageTitle>
 
-<h1>Recovery code verification</h1>
-<hr />
-<StatusMessage Message="@message" />
-<p>
-    You have requested to log in with a recovery code. This login will not be remembered until you provide
-    an authenticator app code at log in or disable 2FA and log in again.
-</p>
-<div class="-mx-2 flex flex-wrap">
-    <div class="w-full px-2 md:w-1/3">
-        <EditForm Model="Input" FormName="login-with-recovery-code" OnValidSubmit="OnValidSubmitAsync" method="post">
+<AuthCard Title="Codigo de recuperacion" Subtitle="Usa uno de los codigos que guardaste al activar 2FA.">
+    <ChildContent>
+        <StatusMessage Message="@message" />
+
+        <p class="text-sm text-stone-500">
+            Esta sesion no se va a recordar hasta que vuelvas a entrar con el codigo de la app o desactives 2FA.
+        </p>
+
+        <EditForm Model="Input" FormName="login-with-recovery-code" OnValidSubmit="OnValidSubmitAsync" method="post" class="space-y-5">
             <DataAnnotationsValidator />
-            <ValidationSummary  class="text-danger" role="alert" />
-            <div class="mb-3 flex flex-col">
-                <InputText @bind-Value="Input.RecoveryCode" id="Input.RecoveryCode" class="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" autocomplete="off" placeholder="RecoveryCode" />
-                <label for="Input.RecoveryCode" class="order-first mb-1 block w-full text-sm font-medium text-gray-700">Recovery Code</label>
-                <ValidationMessage For="() => Input.RecoveryCode"  class="text-danger" />
+            <ValidationSummary class="text-sm text-red-600" role="alert" />
+
+            <div class="ui-field">
+                <label for="Input.RecoveryCode" class="ui-label">Codigo de recuperacion</label>
+                <InputText @bind-Value="Input.RecoveryCode" id="Input.RecoveryCode"
+                           class="ui-input font-mono tracking-wider" autocomplete="off" placeholder="xxxxx-xxxxx" />
+                <ValidationMessage For="() => Input.RecoveryCode" class="text-sm text-red-600" />
             </div>
-            <button type="submit" class="w-full inline-block cursor-pointer rounded border text-center font-medium px-4 py-2 text-base border-blue-600 bg-blue-600 text-white hover:bg-blue-700">Log in</button>
+
+            <button type="submit" class="ui-btn ui-btn-primary ui-btn-block">Entrar</button>
         </EditForm>
-    </div>
-</div>
+    </ChildContent>
+
+    <Footer>
+        <p><a href="Account/Login" class="ui-link">Volver a iniciar sesion</a></p>
+    </Footer>
+</AuthCard>
 
 @code {
     private string? message;
