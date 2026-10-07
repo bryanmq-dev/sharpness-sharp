@@ -1,0 +1,62 @@
+[
+  {
+    "imagen": "https://images.unsplash.com/photo-1551024506-0bccd828d307",
+    "nombre": "Donas",
+    "precio": 15,
+    "stock": 80
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1578985545062-69928b1d9587",
+    "nombre": "Pastel de Chocolate",
+    "precio": 45,
+    "stock": 25
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1555507036-ab1f4038808a",
+    "nombre": "Croissant",
+    "precio": 12,
+    "stock": 60
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1576618148400-a9c1c0e8c4c7",
+    "nombre": "Cheesecake",
+    "precio": 50,
+    "stock": 18
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1587314168485-3236d6710814",
+    "nombre": "Panqueques",
+    "precio": 20,
+    "stock": 45
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1495147466023-ac5c588e2e94",
+    "nombre": "Cupcakes",
+    "precio": 18,
+    "stock": 70
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1599785209707-a456fc1337bb",
+    "nombre": "Tarta de Frutilla",
+    "precio": 35,
+    "stock": 20
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1509440159596-0249088772ff",
+    "nombre": "Pan Artesanal",
+    "precio": 10,
+    "stock": 100
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1571115177098-24ec42ed204d",
+    "nombre": "Brownie",
+    "precio": 14,
+    "stock": 55
+  },
+  {
+    "imagen": "https://images.unsplash.com/photo-1565958011703-44f9829ba187",
+    "nombre": "Torta de Vainilla",
+    "precio": 40,
+    "stock": 15
+  }
+]
