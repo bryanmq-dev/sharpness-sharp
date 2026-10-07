@@ -1,0 +1,22 @@
+<input type="text" @bind="filtroBusqueda" @bind:event="oninput" class="border rounded-xl w-1/2 p-2"
+       placeholder="Busca productos por su nombre" />
+<button class="ui-btn ui-btn-primary" @onclick="FiltrarProductos">Buscar</button>
+<button class="ui-btn ui-btn-soft" @onclick="LimpiarFiltro">Limpiar</button>
+
+@code {
+    private string filtroBusqueda = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> BuscarFiltroCB { get; set; }
+
+    [Parameter]
+    public EventCallback LimpiarFiltroCB { get; set; }
+
+    private Task FiltrarProductos() => BuscarFiltroCB.InvokeAsync(filtroBusqueda);
+
+    private Task LimpiarFiltro()
+    {
+        filtroBusqueda = string.Empty;
+        return LimpiarFiltroCB.InvokeAsync();
+    }
+}

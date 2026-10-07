@@ -1,0 +1,14 @@
+@using sharpness_sharp.Data.Models
+<div class="shadow-lg p-3 flex flex-col hover:translate-2 rounded-xl">
+    <img src="@producto.UrlImagen" class="object-contain rounded-2xl h-1/2" />
+    <p class="font-bold mx-1 mt-2 text-xl">@producto.Nombre</p>
+    <p class="font-bold mx-2 text-xl text-blue-400">Bs. @producto.Precio</p>
+    <p class='@(producto.Stock > 25 ? "bg-green-300" : "bg-red-300") font-bold rounded-2xl p-2'>Stock Disponible:
+        @producto.Stock
+    </p>
+</div>
+
+@code {
+    [Parameter]
+    public Producto producto { get; set; } = null!;
+}

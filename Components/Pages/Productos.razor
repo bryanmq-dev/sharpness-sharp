@@ -1,0 +1,97 @@
+@page "/productos"
+@using sharpness_sharp.Components.UI
+@using sharpness_sharp.Data.Models
+
+<PageTitle>Productos</PageTitle>
+
+<div class="w-full">
+    <ProductSearchBox LimpiarFiltroCB='LimpiarFiltro' BuscarFiltroCB='FiltrarProductos' />
+</div>
+
+@if (lstProductosFiltrados is null || lstProductosFiltrados?.Count == 0)
+{
+    <p>Aun no se tienen productos registrados</p>
+}
+else
+{
+    <div class="grid lg:grid-cols-6 gap-4 md:grid-cols-4 grid-flow-row ">
+        @foreach (Producto producto in lstProductosFiltrados ?? new())
+        {
+            <ProductCard Producto=@producto />
+        }
+    </div>
+}
+
+
+@code {
+    List<Producto>? lstProductos;
+    List<Producto>? lstProductosFiltrados;
+
+
+    protected override void OnInitialized()
+    {
+        lstProductos = new List<Producto>
+        {
+           new Producto(
+    "https://images.unsplash.com/photo-1551024506-0bccd828d307",
+    "Donas", 15, 80),
+
+new Producto(
+    "https://images.unsplash.com/photo-1578985545062-69928b1d9587",
+    "Pastel de Chocolate", 45, 25),
+
+new Producto(
+    "https://images.unsplash.com/photo-1555507036-ab1f4038808a",
+    "Croissant", 12, 60),
+
+new Producto(
+    "https://images.unsplash.com/photo-1576618148400-a9c1c0e8c4c7",
+    "Cheesecake", 50, 18),
+
+new Producto(
+    "https://images.unsplash.com/photo-1587314168485-3236d6710814",
+    "Panqueques", 20, 45),
+
+new Producto(
+    "https://images.unsplash.com/photo-1495147466023-ac5c588e2e94",
+    "Cupcakes", 18, 70),
+
+new Producto(
+    "https://images.unsplash.com/photo-1599785209707-a456fc1337bb",
+    "Tarta de Frutilla", 35, 20),
+
+new Producto(
+    "https://images.unsplash.com/photo-1509440159596-0249088772ff",
+    "Pan Artesanal", 10, 100),
+
+new Producto(
+    "https://images.unsplash.com/photo-1571115177098-24ec42ed204d",
+    "Brownie", 14, 55),
+
+new Producto(
+    "https://images.unsplash.com/photo-1565958011703-44f9829ba187",
+    "Torta de Vainilla", 40, 15),
+        };
+        lstProductosFiltrados = lstProductos;
+        base.OnInitialized();
+    }
+
+    void FiltrarProductos(string filtro)
+    {
+        if (string.IsNullOrEmpty(filtro))
+        {
+            lstProductosFiltrados = lstProductos;
+        }
+        else
+        {
+            lstProductosFiltrados = lstProductos?
+                .Where(producto => producto.Nombre.Contains(filtro, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+    }
+
+    void LimpiarFiltro()
+    {
+        lstProductosFiltrados = lstProductos;
+    }
+}
