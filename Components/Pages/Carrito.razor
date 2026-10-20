@@ -1,0 +1,60 @@
+@page "/carrito"
+@using Microsoft.AspNetCore.Authorization
+@using sharpness_sharp.Data.Dtos
+@using sharpness_sharp.Services
+@attribute [Authorize(Roles = "Cliente")]
+@inject CarritoState carrito
+@inject VentaService ventaService
+@inject NavigationManager navigation
+
+<PageTitle>Carrito</PageTitle>
+
+<h1 class="mb-4 text-2xl font-bold text-cafe">Tu carrito</h1>
+
+@if (carrito.Items.Count == 0)
+{
+    <p>Tu carrito esta vacio.</p>
+}
+else
+{
+    <table class="ui-table">
+        <tbody>
+            @foreach (var item in carrito.Items)
+            {
+                <tr>
+                    <td class="font-semibold">@item.Producto.Nombre</td>
+                    <td>@item.Cantidad x Bs. @item.Producto.Precio</td>
+                    <td>Bs. @(item.Cantidad * item.Producto.Precio)</td>
+                    <td><button class="ui-btn ui-btn-soft ui-btn-sm" @onclick="() => carrito.Quitar(item.Producto.Id)">Quitar</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p class="my-4 text-xl font-bold text-cafe">Total: Bs. @carrito.Total</p>
+
+    @if (error is not null)
+    {
+        <div class="ui-alert ui-alert-error mb-4">@error</div>
+    }
+
+    <div class="flex gap-2">
+        <button class="ui-btn ui-btn-primary" @onclick="Comprar">Comprar</button>
+        <button class="ui-btn ui-btn-soft" @onclick="carrito.Vaciar">Vaciar</button>
+    </div>
+}
+
+@code {
+    string? error;
+
+    async Task Comprar()
+    {
+        var dto = new VentaCrearDto(carrito.Items.Select(item => new VentaItemDto(item.Producto.Id, item.Cantidad)).ToList());
+
+        error = await ventaService.Crear(dto);
+        if (error is not null) return;
+
+        carrito.Vaciar();
+        navigation.NavigateTo("mis-compras");
+    }
+}

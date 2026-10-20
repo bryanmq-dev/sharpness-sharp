@@ -1,3 +1,6 @@
+@implements IDisposable
+@inject sharpness_sharp.Services.CarritoState carrito
+
 <div class="flex h-14 items-center px-4 text-lg font-semibold">
     <a href="">Cozy Coffee</a>
 </div>
@@ -6,7 +9,19 @@
     <NavLink class="block rounded px-3 py-2 text-sm text-crema/80 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white" href="" Match="NavLinkMatch.All">Inicio</NavLink>
     <NavLink class="block rounded px-3 py-2 text-sm text-crema/80 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white" href="productos">Productos</NavLink>
     <NavLink class="block rounded px-3 py-2 text-sm text-crema/80 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white" href="estado">Estado</NavLink>
+    <AuthorizeView Roles="Cliente">
+        <NavLink class="block rounded px-3 py-2 text-sm text-crema/80 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white" href="carrito">Carrito (@carrito.Cantidad)</NavLink>
+        <NavLink class="block rounded px-3 py-2 text-sm text-crema/80 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white" href="mis-compras">Mis compras</NavLink>
+    </AuthorizeView>
     <AuthorizeView Roles="Admin">
         <NavLink class="block rounded px-3 py-2 text-sm text-crema/80 hover:bg-white/10 hover:text-white [&.active]:bg-white/20 [&.active]:text-white" href="admin/productos">Administrar</NavLink>
     </AuthorizeView>
 </nav>
+
+@code {
+    protected override void OnInitialized() => carrito.OnCambio += Actualizar;
+
+    private void Actualizar() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => carrito.OnCambio -= Actualizar;
+}

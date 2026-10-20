@@ -3,6 +3,7 @@
 @using sharpness_sharp.Services
 @using sharpness_sharp.Data.Dtos
 @inject ProductoService productoService
+@inject CarritoState carrito
 
 <PageTitle>Productos</PageTitle>
 
@@ -20,7 +21,7 @@ else
     <div class="grid lg:grid-cols-6 gap-4 md:grid-cols-4 grid-flow-row ">
         @foreach (ProductoDto producto in lstProductosFiltrados ?? new())
         {
-            <ProductCard Producto=@producto />
+            <ProductCard Producto=@producto OnAgregar="carrito.Agregar" />
         }
     </div>
 }

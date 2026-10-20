@@ -5,10 +5,16 @@
     <p class="mx-1 text-sm text-caramelo">@producto.Categoria</p>
     <p class="mx-1 text-xl font-bold text-cafe">Bs. @producto.Precio</p>
     <p class='@(producto.Stock > 25 ? "bg-green-200" : "bg-red-200") mt-2 rounded-2xl p-2 font-bold'>Stock: @producto.Stock</p>
+    <AuthorizeView Roles="Cliente">
+        <button class="ui-btn ui-btn-primary ui-btn-sm mt-2" disabled="@(producto.Stock == 0)" @onclick="() => OnAgregar.InvokeAsync(producto)">Agregar</button>
+    </AuthorizeView>
 </div>
 
 @code {
     [Parameter]
     public ProductoDto producto { get; set; } = null!;
+
+    [Parameter]
+    public EventCallback<ProductoDto> OnAgregar { get; set; }
 
 }
