@@ -5,6 +5,10 @@
   --color-info: #0dcaf0;
   --color-success: #198754;
   --color-secondary: #6c757d;
+  --color-crema: #f7efe3;
+  --color-espuma: #fffaf2;
+  --color-cafe: #4a2f20;
+  --color-caramelo: #c08a4a;
 }
 
 html,
@@ -66,7 +70,7 @@ h1:focus {
   }
 
   .ui-btn-primary {
-    @apply bg-stone-900 text-white hover:bg-stone-800 focus:ring-stone-900/10;
+    @apply bg-cafe text-espuma hover:bg-cafe/90 focus:ring-cafe/15;
   }
 
   .ui-btn-soft {
