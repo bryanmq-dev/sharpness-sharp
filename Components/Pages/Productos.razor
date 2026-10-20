@@ -4,8 +4,9 @@
 
 <PageTitle>Productos</PageTitle>
 
-<div class="w-full">
+<div class="flex w-full items-center gap-2">
     <ProductSearchBox LimpiarFiltroCB='LimpiarFiltro' BuscarFiltroCB='FiltrarProductos' />
+    <CategoriaFiltro Categorias="categorias" CategoriaCB="FiltrarCategoria" />
 </div>
 
 @if (lstProductosFiltrados is null || lstProductosFiltrados?.Count == 0)
@@ -26,6 +27,9 @@ else
 @code {
     List<Producto>? lstProductos;
     List<Producto>? lstProductosFiltrados;
+    List<string> categorias = new();
+    string filtroTexto = string.Empty;
+    string filtroCategoria = string.Empty;
 
 
     protected override void OnInitialized()
@@ -48,25 +52,33 @@ else
             new Producto("https://images.unsplash.com/photo-1495147466023-ac5c588e2e94", "Cupcakes", 18, 70, "Postres")
         };
         lstProductosFiltrados = lstProductos;
+        categorias = lstProductos.Select(producto => producto.Categoria).Distinct().ToList();
         base.OnInitialized();
     }
 
     void FiltrarProductos(string filtro)
     {
-        if (string.IsNullOrEmpty(filtro))
-        {
-            lstProductosFiltrados = lstProductos;
-        }
-        else
-        {
-            lstProductosFiltrados = lstProductos?
-                .Where(producto => producto.Nombre.Contains(filtro, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-        }
+        filtroTexto = filtro;
+        Aplicar();
+    }
+
+    void FiltrarCategoria(string categoria)
+    {
+        filtroCategoria = categoria;
+        Aplicar();
     }
 
     void LimpiarFiltro()
     {
-        lstProductosFiltrados = lstProductos;
+        filtroTexto = string.Empty;
+        Aplicar();
+    }
+
+    void Aplicar()
+    {
+        lstProductosFiltrados = lstProductos?
+            .Where(producto => producto.Nombre.Contains(filtroTexto, StringComparison.OrdinalIgnoreCase))
+            .Where(producto => filtroCategoria == string.Empty || producto.Categoria == filtroCategoria)
+            .ToList();
     }
 }

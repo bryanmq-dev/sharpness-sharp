@@ -1,0 +1,17 @@
+<select class="ui-input w-48" @onchange="Cambiar">
+    <option value="">Todas las categorias</option>
+    @for (int i = 0; i < Categorias.Count; i++)
+    {
+        <option value="@Categorias[i]">@Categorias[i]</option>
+    }
+</select>
+
+@code {
+    [Parameter]
+    public List<string> Categorias { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<string> CategoriaCB { get; set; }
+
+    private Task Cambiar(ChangeEventArgs e) => CategoriaCB.InvokeAsync(e.Value?.ToString() ?? string.Empty);
+}
