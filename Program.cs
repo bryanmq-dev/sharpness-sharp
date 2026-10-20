@@ -1,5 +1,4 @@
-﻿using sharpness_sharp.API;
-using sharpness_sharp.Components;
+﻿using sharpness_sharp.Components;
 using sharpness_sharp.Config;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +10,6 @@ builder.Services.UseAuth(builder.Configuration);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped<ProductoService>();
-
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
@@ -23,7 +20,6 @@ else
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
-
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
