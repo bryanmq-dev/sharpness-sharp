@@ -1,4 +1,4 @@
-﻿using sharpness_sharp.Components;
+using sharpness_sharp.Components;
 using sharpness_sharp.Config;
 using sharpness_sharp.Repositories;
 using sharpness_sharp.Services;
@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.UseHttpClient(builder.Configuration);
 
 builder.Services.UseAuth(builder.Configuration);
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -34,6 +36,9 @@ app.UseWhen(
     contexto => !contexto.Request.Path.StartsWithSegments("/api"),
     rama => rama.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true));
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAntiforgery();
 

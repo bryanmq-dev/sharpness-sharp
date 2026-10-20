@@ -1,0 +1,61 @@
+@page "/admin/productos"
+@using Microsoft.AspNetCore.Authorization
+@using sharpness_sharp.Components.UI
+@using sharpness_sharp.Services
+@using sharpness_sharp.Data.Dtos
+@attribute [Authorize(Roles = "Admin")]
+@inject ProductoService productoService
+
+<PageTitle>Administrar productos</PageTitle>
+
+<div class="mb-4 flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-cafe">Administrar productos</h1>
+    <button class="ui-btn ui-btn-primary" @onclick="() => modal?.Abrir(null)">Nuevo producto</button>
+</div>
+
+<ProductoModal @ref="modal" Categorias="categorias" OnGuardado="Cargar" />
+
+@if (error is not null)
+{
+    <div class="ui-alert ui-alert-error mb-4">@error</div>
+}
+
+<table class="ui-table">
+    <tbody>
+        @foreach (ProductoDto producto in lstProductos)
+        {
+            <tr>
+                <td><img src="@producto.UrlImagen" class="h-12 w-12 rounded-lg object-cover" /></td>
+                <td class="font-semibold">@producto.Nombre</td>
+                <td>@producto.Categoria</td>
+                <td>Bs. @producto.Precio</td>
+                <td>@producto.Stock</td>
+                <td class="flex gap-2">
+                    <button class="ui-btn ui-btn-soft ui-btn-sm" @onclick="() => modal?.Abrir(producto)">Editar</button>
+                    <button class="ui-btn ui-btn-danger ui-btn-sm" @onclick="() => Eliminar(producto)">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<ProductoDto> lstProductos = new();
+    List<CategoriaDto> categorias = new();
+    ProductoModal? modal;
+    string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categorias = await productoService.ObtenerCategorias();
+        await Cargar();
+    }
+
+    async Task Cargar() => lstProductos = await productoService.ObtenerProductos();
+
+    async Task Eliminar(ProductoDto producto)
+    {
+        error = await productoService.Eliminar(producto.Id);
+        await Cargar();
+    }
+}

@@ -1,4 +1,6 @@
-﻿namespace sharpness_sharp.Config;
+using sharpness_sharp.Services;
+
+namespace sharpness_sharp.Config;
 
 public static class SharpnessHttpClient
 {
@@ -13,15 +15,20 @@ public static class SharpnessHttpClient
     /// </summary>
     public static IServiceCollection UseHttpClient(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient(ApiClientName, client =>
+        services.AddHttpClient(ApiClientName);
+        services.AddScoped<CookieState>();
+
+        services.AddScoped(sp =>
         {
+            var pipeline = sp.GetRequiredService<IHttpMessageHandlerFactory>().CreateHandler(ApiClientName);
+            var cliente = new HttpClient(new CookieHandler(sp.GetRequiredService<CookieState>(), pipeline), disposeHandler: false);
+
             var baseUrl = configuration["Api:BaseUrl"];
-
             if (!string.IsNullOrWhiteSpace(baseUrl))
-                client.BaseAddress = new Uri(ConBarraFinal(baseUrl));
-        });
+                cliente.BaseAddress = new Uri(ConBarraFinal(baseUrl));
 
-        services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ApiClientName));
+            return cliente;
+        });
 
         return services;
     }

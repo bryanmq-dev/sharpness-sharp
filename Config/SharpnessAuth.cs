@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using sharpness_sharp.Components.Account;
@@ -56,6 +58,12 @@ namespace sharpness_sharp.Config
                 .AddDefaultTokenProviders();
 
             services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+            services.ConfigureApplicationCookie(opciones =>
+            {
+                opciones.Events.OnRedirectToLogin = contexto => RedirigirOResponder(contexto, StatusCodes.Status401Unauthorized);
+                opciones.Events.OnRedirectToAccessDenied = contexto => RedirigirOResponder(contexto, StatusCodes.Status403Forbidden);
+            });
 
             return services;
         }
@@ -142,6 +150,16 @@ namespace sharpness_sharp.Config
             }
 
             return app;
+        }
+
+        private static Task RedirigirOResponder(RedirectContext<CookieAuthenticationOptions> contexto, int codigo)
+        {
+            if (contexto.Request.Path.StartsWithSegments("/api"))
+                contexto.Response.StatusCode = codigo;
+            else
+                contexto.Response.Redirect(contexto.RedirectUri);
+
+            return Task.CompletedTask;
         }
 
         private static string Errores(IdentityResult resultado) =>

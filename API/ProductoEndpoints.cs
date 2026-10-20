@@ -16,7 +16,9 @@ namespace sharpness_sharp.API
             grupo.MapGet("/{id:int}", async (int id, ProductoRepository repositorio) =>
                 await repositorio.ObtenerProducto(id) is { } producto ? Results.Ok(producto) : Results.NotFound());
 
-            grupo.MapPost("/", async (ProductoGuardarDto dto, ProductoRepository repositorio) =>
+            var escritura = grupo.MapGroup("").RequireAuthorization(politica => politica.RequireRole("Admin"));
+
+            escritura.MapPost("/", async (ProductoGuardarDto dto, ProductoRepository repositorio) =>
             {
                 if (await Validar(dto, repositorio) is { } error) return error;
 
@@ -24,7 +26,7 @@ namespace sharpness_sharp.API
                 return Results.Created($"/api/productos/{creado.Id}", creado);
             });
 
-            grupo.MapPut("/{id:int}", async (int id, ProductoGuardarDto dto, ProductoRepository repositorio) =>
+            escritura.MapPut("/{id:int}", async (int id, ProductoGuardarDto dto, ProductoRepository repositorio) =>
             {
                 if (await Validar(dto, repositorio) is { } error) return error;
 
@@ -33,7 +35,7 @@ namespace sharpness_sharp.API
                     : Results.NotFound();
             });
 
-            grupo.MapDelete("/{id:int}", async (int id, ProductoRepository repositorio) =>
+            escritura.MapDelete("/{id:int}", async (int id, ProductoRepository repositorio) =>
                 await repositorio.Eliminar(id) ? Results.NoContent() : Results.NotFound());
         }
 
