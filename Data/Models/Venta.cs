@@ -7,6 +7,7 @@ namespace sharpness_sharp.Data.Models
         public string UsuarioId { get; set; } = null!;
         public ApplicationUser Usuario { get; set; } = null!;
         public decimal Total { get; set; }
+        public bool CompraVip { get; set; }
         public List<DetalleVenta> Detalles { get; set; } = new();
     }
 }

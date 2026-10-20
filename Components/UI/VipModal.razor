@@ -1,0 +1,33 @@
+@using sharpness_sharp.Data.Models
+@inject NavigationManager navigation
+
+<button class="ui-btn ui-btn-primary" @onclick="() => visible = true">Hazte VIP</button>
+
+@if (visible)
+{
+    <div class="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
+        <div class="ui-panel w-full max-w-md">
+            <h2 class="ui-section-title mb-2">Cozy Coffee VIP</h2>
+            <ul class="mb-4 list-disc space-y-1 pl-5 text-sm text-stone-700">
+                <li>Productos exclusivos que no estan en el menu publico</li>
+                <li>Compras VIP registradas con tu beneficio</li>
+                <li>30 dias de acceso desde la confirmacion</li>
+            </ul>
+            <p class="mb-4 text-2xl font-bold text-cafe">Bs. @Suscripcion.PrecioMensual</p>
+            <div class="flex justify-end gap-2">
+                <button class="ui-btn ui-btn-soft" @onclick="() => visible = false">Ahora no</button>
+                <button class="ui-btn ui-btn-primary" @onclick="Continuar">Continuar</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    bool visible;
+
+    void Continuar()
+    {
+        visible = false;
+        navigation.NavigateTo("vip/confirmar");
+    }
+}

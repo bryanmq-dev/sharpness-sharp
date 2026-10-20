@@ -16,6 +16,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<ProductoRepository>();
 builder.Services.AddScoped<ProductoService>();
+builder.Services.AddScoped<SuscripcionRepository>();
+builder.Services.AddScoped<SuscripcionService>();
 builder.Services.AddScoped<VentaRepository>();
 builder.Services.AddScoped<VentaService>();
 builder.Services.AddScoped<CarritoState>();

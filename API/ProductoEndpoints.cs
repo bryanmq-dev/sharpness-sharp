@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using sharpness_sharp.Config;
 using sharpness_sharp.Data.Dtos;
 using sharpness_sharp.Repositories;
@@ -10,11 +11,22 @@ namespace sharpness_sharp.API
         {
             var grupo = app.MapGroup("/api/productos");
 
-            grupo.MapGet("/", async (ProductoRepository repositorio, int? categoriaId) =>
-                Results.Ok(await repositorio.ObtenerProductos(categoriaId)));
+            grupo.MapGet("/", async (ProductoRepository repositorio, ClaimsPrincipal usuario, int? categoriaId) =>
+                Results.Ok(await repositorio.ObtenerProductos(categoriaId, usuario.IsInRole("Admin"))));
 
-            grupo.MapGet("/{id:int}", async (int id, ProductoRepository repositorio) =>
-                await repositorio.ObtenerProducto(id) is { } producto ? Results.Ok(producto) : Results.NotFound());
+            grupo.MapGet("/vip", async (ProductoRepository repositorio) =>
+                Results.Ok(await repositorio.ObtenerProductosVip()))
+                .RequireAuthorization(politica => politica.RequireRole(VipEndpoints.RolVip));
+
+            grupo.MapGet("/{id:int}", async (int id, ProductoRepository repositorio, ClaimsPrincipal usuario) =>
+            {
+                var producto = await repositorio.ObtenerProducto(id);
+
+                if (producto is null) return Results.NotFound();
+                if (producto.EsVip && !usuario.IsInRole(VipEndpoints.RolVip) && !usuario.IsInRole("Admin")) return Results.Forbid();
+
+                return Results.Ok(producto);
+            });
 
             var escritura = grupo.MapGroup("").RequireAuthorization(politica => politica.RequireRole("Admin"));
 

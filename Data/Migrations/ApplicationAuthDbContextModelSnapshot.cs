@@ -309,6 +309,9 @@ namespace sharpness_sharp.Migrations
                     b.Property<int>("CategoriaId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("EsVip")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -335,6 +338,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 1,
                             CategoriaId = 1,
+                            EsVip = false,
                             Nombre = "Americano",
                             Precio = 12m,
                             Stock = 100,
@@ -344,6 +348,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 2,
                             CategoriaId = 1,
+                            EsVip = false,
                             Nombre = "Capuccino",
                             Precio = 16m,
                             Stock = 90,
@@ -353,6 +358,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 3,
                             CategoriaId = 1,
+                            EsVip = false,
                             Nombre = "Latte",
                             Precio = 18m,
                             Stock = 80,
@@ -362,6 +368,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 4,
                             CategoriaId = 1,
+                            EsVip = false,
                             Nombre = "Flat White",
                             Precio = 17m,
                             Stock = 60,
@@ -371,6 +378,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 5,
                             CategoriaId = 1,
+                            EsVip = false,
                             Nombre = "Cafe Filtrado",
                             Precio = 15m,
                             Stock = 40,
@@ -380,6 +388,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 6,
                             CategoriaId = 2,
+                            EsVip = false,
                             Nombre = "Cafe Helado",
                             Precio = 18m,
                             Stock = 50,
@@ -389,6 +398,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 7,
                             CategoriaId = 2,
+                            EsVip = false,
                             Nombre = "Te Helado",
                             Precio = 14m,
                             Stock = 45,
@@ -398,6 +408,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 8,
                             CategoriaId = 2,
+                            EsVip = false,
                             Nombre = "Te con Leche",
                             Precio = 13m,
                             Stock = 35,
@@ -407,6 +418,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 9,
                             CategoriaId = 3,
+                            EsVip = false,
                             Nombre = "Croissant",
                             Precio = 12m,
                             Stock = 60,
@@ -416,6 +428,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 10,
                             CategoriaId = 3,
+                            EsVip = false,
                             Nombre = "Donas",
                             Precio = 15m,
                             Stock = 80,
@@ -425,6 +438,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 11,
                             CategoriaId = 3,
+                            EsVip = false,
                             Nombre = "Galletas con Chips",
                             Precio = 8m,
                             Stock = 120,
@@ -434,6 +448,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 12,
                             CategoriaId = 4,
+                            EsVip = false,
                             Nombre = "Pastel de Chocolate",
                             Precio = 45m,
                             Stock = 25,
@@ -443,6 +458,7 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 13,
                             CategoriaId = 4,
+                            EsVip = false,
                             Nombre = "Brownie",
                             Precio = 14m,
                             Stock = 55,
@@ -452,17 +468,78 @@ namespace sharpness_sharp.Migrations
                         {
                             Id = 14,
                             CategoriaId = 4,
+                            EsVip = false,
                             Nombre = "Cupcakes",
                             Precio = 18m,
                             Stock = 70,
                             UrlImagen = "https://images.unsplash.com/photo-1495147466023-ac5c588e2e94"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CategoriaId = 1,
+                            EsVip = true,
+                            Nombre = "Geisha Reserva",
+                            Precio = 40m,
+                            Stock = 15,
+                            UrlImagen = "https://images.unsplash.com/photo-1497935586351-b67a49e012bf"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CategoriaId = 1,
+                            EsVip = true,
+                            Nombre = "Cata de Cafes",
+                            Precio = 55m,
+                            Stock = 10,
+                            UrlImagen = "https://images.unsplash.com/photo-1509042239860-f550ce710b93"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CategoriaId = 1,
+                            EsVip = true,
+                            Nombre = "Latte Art Premium",
+                            Precio = 30m,
+                            Stock = 20,
+                            UrlImagen = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"
                         });
+                });
+
+            modelBuilder.Entity("sharpness_sharp.Data.Models.Suscripcion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("FechaFin")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Monto")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Suscripciones");
                 });
 
             modelBuilder.Entity("sharpness_sharp.Data.Models.Venta", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CompraVip")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Fecha")
@@ -613,6 +690,17 @@ namespace sharpness_sharp.Migrations
                         .IsRequired();
 
                     b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("sharpness_sharp.Data.Models.Suscripcion", b =>
+                {
+                    b.HasOne("sharpness_sharp.Data.ApplicationUser", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("sharpness_sharp.Data.Models.Venta", b =>

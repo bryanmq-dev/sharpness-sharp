@@ -1,0 +1,11 @@
+bin/
+obj/
+node_modules/
+.git/
+.vscode/
+core.*
+*.db
+*.db-shm
+*.db-wal
+wwwroot/app.css
+.tailwind-watch.pid

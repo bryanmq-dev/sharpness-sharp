@@ -1,0 +1,46 @@
+@page "/vip/confirmar"
+@using Microsoft.AspNetCore.Authorization
+@using sharpness_sharp.Data.Models
+@using sharpness_sharp.Services
+@attribute [Authorize(Roles = "Cliente")]
+@inject SuscripcionService suscripcionService
+@inject NavigationManager navigation
+
+<PageTitle>Confirmar suscripcion</PageTitle>
+
+<div class="ui-panel mx-auto max-w-md">
+    <h1 class="ui-section-title mb-4">Confirmar suscripcion VIP</h1>
+
+    <table class="ui-table mb-4">
+        <tbody>
+            <tr><td>Plan</td><td>Cozy Coffee VIP</td></tr>
+            <tr><td>Duracion</td><td>30 dias</td></tr>
+            <tr><td>Total</td><td class="font-bold">Bs. @Suscripcion.PrecioMensual</td></tr>
+        </tbody>
+    </table>
+
+    @if (error is not null)
+    {
+        <div class="ui-alert ui-alert-error mb-4">@error</div>
+    }
+
+    <div class="flex justify-end gap-2">
+        <a href="productos" class="ui-btn ui-btn-soft">Cancelar</a>
+        <button class="ui-btn ui-btn-primary" disabled="@procesando" @onclick="Confirmar">Confirmar compra</button>
+    </div>
+</div>
+
+@code {
+    string? error;
+    bool procesando;
+
+    async Task Confirmar()
+    {
+        procesando = true;
+        error = await suscripcionService.Suscribir();
+        procesando = false;
+
+        if (error is null)
+            navigation.NavigateTo("Account/RefrescarSesion?returnUrl=vip/productos", forceLoad: true);
+    }
+}

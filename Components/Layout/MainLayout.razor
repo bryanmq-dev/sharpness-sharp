@@ -1,3 +1,4 @@
+@using sharpness_sharp.Components.UI
 @inherits LayoutComponentBase
 @implements IDisposable
 @inject NavigationManager NavigationManager
@@ -17,6 +18,12 @@
                     </div>
                 </NotAuthorized>
                 <Authorized>
+                    <AuthorizeView Roles="Cliente" Context="cliente">
+                        <AuthorizeView Roles="ClienteVIP" Context="vip">
+                            <Authorized><span class="rounded-xl bg-caramelo px-3 py-1 text-sm font-bold text-white">VIP</span></Authorized>
+                            <NotAuthorized><VipModal /></NotAuthorized>
+                        </AuthorizeView>
+                    </AuthorizeView>
                     <div class="ui-btn-primary ui-btn mx-2">
                         <NavLink href="Account/Manage"> @context.User.Identity?.Name
                         </NavLink>

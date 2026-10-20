@@ -7,6 +7,9 @@ namespace sharpness_sharp.Services
         public async Task<List<ProductoDto>> ObtenerProductos() =>
             await http.GetFromJsonAsync<List<ProductoDto>>("api/productos") ?? new();
 
+        public async Task<List<ProductoDto>> ObtenerProductosVip() =>
+            await http.GetFromJsonAsync<List<ProductoDto>>("api/productos/vip") ?? new();
+
         public async Task<List<CategoriaDto>> ObtenerCategorias() =>
             await http.GetFromJsonAsync<List<CategoriaDto>>("api/categorias") ?? new();
 

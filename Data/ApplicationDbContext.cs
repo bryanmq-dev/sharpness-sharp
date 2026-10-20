@@ -8,6 +8,7 @@ public class ApplicationAuthDbContext(DbContextOptions<ApplicationAuthDbContext>
 {
     public DbSet<Producto> Productos => Set<Producto>();
     public DbSet<Categoria> Categorias => Set<Categoria>();
+    public DbSet<Suscripcion> Suscripciones => Set<Suscripcion>();
     public DbSet<Venta> Ventas => Set<Venta>();
     public DbSet<DetalleVenta> DetallesVenta => Set<DetalleVenta>();
 
@@ -23,6 +24,8 @@ public class ApplicationAuthDbContext(DbContextOptions<ApplicationAuthDbContext>
         builder.Entity<Producto>()
             .Property(producto => producto.Precio)
             .HasPrecision(10, 2);
+
+        builder.Entity<Suscripcion>().Property(suscripcion => suscripcion.Monto).HasPrecision(10, 2);
 
         builder.Entity<Venta>()
             .HasMany(venta => venta.Detalles)
@@ -52,7 +55,10 @@ public class ApplicationAuthDbContext(DbContextOptions<ApplicationAuthDbContext>
             new Producto { Id = 11, Nombre = "Galletas con Chips", Precio = 8m, Stock = 120, UrlImagen = "https://images.unsplash.com/photo-1558961363-fa8fdf82db35", CategoriaId = 3 },
             new Producto { Id = 12, Nombre = "Pastel de Chocolate", Precio = 45m, Stock = 25, UrlImagen = "https://images.unsplash.com/photo-1578985545062-69928b1d9587", CategoriaId = 4 },
             new Producto { Id = 13, Nombre = "Brownie", Precio = 14m, Stock = 55, UrlImagen = "https://images.unsplash.com/photo-1571115177098-24ec42ed204d", CategoriaId = 4 },
-            new Producto { Id = 14, Nombre = "Cupcakes", Precio = 18m, Stock = 70, UrlImagen = "https://images.unsplash.com/photo-1495147466023-ac5c588e2e94", CategoriaId = 4 });
+            new Producto { Id = 14, Nombre = "Cupcakes", Precio = 18m, Stock = 70, UrlImagen = "https://images.unsplash.com/photo-1495147466023-ac5c588e2e94", CategoriaId = 4 },
+            new Producto { Id = 15, Nombre = "Geisha Reserva", Precio = 40m, Stock = 15, UrlImagen = "https://images.unsplash.com/photo-1497935586351-b67a49e012bf", CategoriaId = 1, EsVip = true },
+            new Producto { Id = 16, Nombre = "Cata de Cafes", Precio = 55m, Stock = 10, UrlImagen = "https://images.unsplash.com/photo-1509042239860-f550ce710b93", CategoriaId = 1, EsVip = true },
+            new Producto { Id = 17, Nombre = "Latte Art Premium", Precio = 30m, Stock = 20, UrlImagen = "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085", CategoriaId = 1, EsVip = true });
     }
 }
 

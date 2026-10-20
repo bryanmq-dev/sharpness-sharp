@@ -7,12 +7,24 @@ namespace sharpness_sharp.Repositories
 {
     public class ProductoRepository(ApplicationAuthDbContext db)
     {
-        public async Task<List<ProductoDto>> ObtenerProductos(int? categoriaId = null)
+        public async Task<List<ProductoDto>> ObtenerProductos(int? categoriaId = null, bool incluirVip = false)
         {
             var productos = await db.Productos
                 .AsNoTracking()
                 .Include(producto => producto.Categoria)
                 .Where(producto => categoriaId == null || producto.CategoriaId == categoriaId)
+                .Where(producto => incluirVip || !producto.EsVip)
+                .ToListAsync();
+
+            return productos.Select(producto => producto.ADto()).ToList();
+        }
+
+        public async Task<List<ProductoDto>> ObtenerProductosVip()
+        {
+            var productos = await db.Productos
+                .AsNoTracking()
+                .Include(producto => producto.Categoria)
+                .Where(producto => producto.EsVip)
                 .ToListAsync();
 
             return productos.Select(producto => producto.ADto()).ToList();

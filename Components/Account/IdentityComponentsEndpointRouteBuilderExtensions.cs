@@ -41,6 +41,18 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
             return TypedResults.Challenge(properties, [provider]);
         });
 
+        accountGroup.MapGet("/RefrescarSesion", async (
+            ClaimsPrincipal claimsPrincipal,
+            [FromServices] SignInManager<ApplicationUser> signInManager,
+            string? returnUrl) =>
+        {
+            var usuario = await signInManager.UserManager.GetUserAsync(claimsPrincipal);
+            if (usuario is null) return TypedResults.Redirect("/");
+
+            await signInManager.RefreshSignInAsync(usuario);
+            return TypedResults.LocalRedirect("~/" + (returnUrl ?? string.Empty).TrimStart('/'));
+        }).RequireAuthorization();
+
         accountGroup.MapPost("/Logout", async (
             ClaimsPrincipal user,
             [FromServices] SignInManager<ApplicationUser> signInManager,
