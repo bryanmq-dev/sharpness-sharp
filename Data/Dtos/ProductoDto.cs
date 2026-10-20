@@ -4,6 +4,8 @@ namespace sharpness_sharp.Data.Dtos
 {
     public record ProductoDto(int Id, string Nombre, decimal Precio, int Stock, string UrlImagen, string Categoria);
 
+    public record ProductoGuardarDto(string Nombre, decimal Precio, int Stock, string UrlImagen, int CategoriaId);
+
     public record CategoriaDto(int Id, string Nombre);
 
     public static class Mapeos

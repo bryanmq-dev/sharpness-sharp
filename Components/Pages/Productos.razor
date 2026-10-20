@@ -8,8 +8,11 @@
 
 <div class="flex w-full items-center gap-2">
     <ProductSearchBox LimpiarFiltroCB='LimpiarFiltro' BuscarFiltroCB='FiltrarProductos' />
-    <CategoriaFiltro Categorias="categorias" CategoriaCB="FiltrarCategoria" />
+    <CategoriaFiltro Categorias="categorias.Select(categoria => categoria.Nombre).ToList()" CategoriaCB="FiltrarCategoria" />
+    <button class="ui-btn ui-btn-primary ml-auto" @onclick="() => modal?.Abrir(null)">Nuevo producto</button>
 </div>
+
+<ProductoModal @ref="modal" Categorias="categorias" OnGuardado="Cargar" />
 
 @if (lstProductosFiltrados is null || lstProductosFiltrados?.Count == 0)
 {
@@ -20,7 +23,7 @@ else
     <div class="grid lg:grid-cols-6 gap-4 md:grid-cols-4 grid-flow-row ">
         @foreach (ProductoDto producto in lstProductosFiltrados ?? new())
         {
-            <ProductCard Producto=@producto />
+            <ProductCard Producto=@producto OnEditar="Editar" OnEliminar="Eliminar" />
         }
     </div>
 }
@@ -29,16 +32,30 @@ else
 @code {
     List<ProductoDto>? lstProductos;
     List<ProductoDto>? lstProductosFiltrados;
-    List<string> categorias = new();
+    List<CategoriaDto> categorias = new();
+    ProductoModal? modal;
     string filtroTexto = string.Empty;
     string filtroCategoria = string.Empty;
 
 
     protected override async Task OnInitializedAsync()
     {
+        categorias = await productoService.ObtenerCategorias();
+        await Cargar();
+    }
+
+    async Task Cargar()
+    {
         lstProductos = await productoService.ObtenerProductos();
-        lstProductosFiltrados = lstProductos;
-        categorias = (await productoService.ObtenerCategorias()).Select(categoria => categoria.Nombre).ToList();
+        Aplicar();
+    }
+
+    void Editar(ProductoDto producto) => modal?.Abrir(producto);
+
+    async Task Eliminar(ProductoDto producto)
+    {
+        await productoService.Eliminar(producto.Id);
+        await Cargar();
     }
 
     void FiltrarProductos(string filtro)

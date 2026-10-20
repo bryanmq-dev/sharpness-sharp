@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using sharpness_sharp.Data;
 using sharpness_sharp.Data.Dtos;
+using sharpness_sharp.Data.Models;
 
 namespace sharpness_sharp.Repositories
 {
@@ -32,6 +33,52 @@ namespace sharpness_sharp.Repositories
             var categorias = await db.Categorias.AsNoTracking().ToListAsync();
 
             return categorias.Select(categoria => categoria.ADto()).ToList();
+        }
+
+        public async Task<bool> ExisteCategoria(int categoriaId) =>
+            await db.Categorias.AnyAsync(categoria => categoria.Id == categoriaId);
+
+        public async Task<ProductoDto> Crear(ProductoGuardarDto dto)
+        {
+            var producto = new Producto
+            {
+                Nombre = dto.Nombre,
+                Precio = dto.Precio,
+                Stock = dto.Stock,
+                UrlImagen = dto.UrlImagen,
+                CategoriaId = dto.CategoriaId
+            };
+
+            db.Productos.Add(producto);
+            await db.SaveChangesAsync();
+
+            return (await ObtenerProducto(producto.Id))!;
+        }
+
+        public async Task<ProductoDto?> Actualizar(int id, ProductoGuardarDto dto)
+        {
+            var producto = await db.Productos.FirstOrDefaultAsync(p => p.Id == id);
+            if (producto is null) return null;
+
+            producto.Nombre = dto.Nombre;
+            producto.Precio = dto.Precio;
+            producto.Stock = dto.Stock;
+            producto.UrlImagen = dto.UrlImagen;
+            producto.CategoriaId = dto.CategoriaId;
+            await db.SaveChangesAsync();
+
+            return await ObtenerProducto(id);
+        }
+
+        public async Task<bool> Eliminar(int id)
+        {
+            var producto = await db.Productos.FirstOrDefaultAsync(p => p.Id == id);
+            if (producto is null) return false;
+
+            db.Productos.Remove(producto);
+            await db.SaveChangesAsync();
+
+            return true;
         }
     }
 }

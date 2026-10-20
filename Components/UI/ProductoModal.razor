@@ -1,0 +1,133 @@
+@using System.ComponentModel.DataAnnotations
+@using sharpness_sharp.Data.Dtos
+@using sharpness_sharp.Services
+@inject ProductoService productoService
+
+@if (Visible)
+{
+    <div class="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
+        <div class="ui-panel w-full max-w-md">
+            <h2 class="ui-section-title mb-4">@(productoId is null ? "Nuevo producto" : "Editar producto")</h2>
+
+            <EditForm Model="formulario" OnValidSubmit="Guardar" class="space-y-4">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-sm text-red-600" />
+
+                <div class="ui-field">
+                    <label class="ui-label">Nombre</label>
+                    <InputText @bind-Value="formulario.Nombre" class="ui-input" />
+                </div>
+
+                <div class="ui-field">
+                    <label class="ui-label">Precio</label>
+                    <InputNumber @bind-Value="formulario.Precio" class="ui-input" />
+                </div>
+
+                <div class="ui-field">
+                    <label class="ui-label">Stock</label>
+                    <InputNumber @bind-Value="formulario.Stock" class="ui-input" />
+                </div>
+
+                <div class="ui-field">
+                    <label class="ui-label">Imagen (URL)</label>
+                    <InputText @bind-Value="formulario.UrlImagen" class="ui-input" />
+                </div>
+
+                <div class="ui-field">
+                    <label class="ui-label">Categoria</label>
+                    <InputSelect @bind-Value="formulario.CategoriaId" class="ui-input">
+                        <option value="0">Selecciona una categoria</option>
+                        @for (int i = 0; i < Categorias.Count; i++)
+                        {
+                            <option value="@Categorias[i].Id">@Categorias[i].Nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+
+                @if (error is not null)
+                {
+                    <div class="ui-alert ui-alert-error">@error</div>
+                }
+
+                <div class="flex justify-end gap-2">
+                    <button type="button" class="ui-btn ui-btn-soft" @onclick="Cerrar">Cancelar</button>
+                    <button type="submit" class="ui-btn ui-btn-primary">Guardar</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; }
+
+    [Parameter]
+    public List<CategoriaDto> Categorias { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnGuardado { get; set; }
+
+    [Parameter]
+    public EventCallback OnCerrar { get; set; }
+
+    private Formulario formulario = new();
+    private int? productoId;
+    private string? error;
+
+    public void Abrir(ProductoDto? producto)
+    {
+        error = null;
+        productoId = producto?.Id;
+        formulario = producto is null
+            ? new Formulario()
+            : new Formulario
+            {
+                Nombre = producto.Nombre,
+                Precio = producto.Precio,
+                Stock = producto.Stock,
+                UrlImagen = producto.UrlImagen,
+                CategoriaId = Categorias.FirstOrDefault(c => c.Nombre == producto.Categoria)?.Id ?? 0
+            };
+        Visible = true;
+        StateHasChanged();
+    }
+
+    private async Task Guardar()
+    {
+        var dto = new ProductoGuardarDto(formulario.Nombre, formulario.Precio, formulario.Stock, formulario.UrlImagen, formulario.CategoriaId);
+
+        error = productoId is null
+            ? await productoService.Crear(dto)
+            : await productoService.Actualizar(productoId.Value, dto);
+
+        if (error is not null) return;
+
+        Visible = false;
+        await OnGuardado.InvokeAsync();
+    }
+
+    private async Task Cerrar()
+    {
+        Visible = false;
+        await OnCerrar.InvokeAsync();
+    }
+
+    private class Formulario
+    {
+        [Required]
+        public string Nombre { get; set; } = "";
+
+        [Range(0.01, 100000)]
+        public decimal Precio { get; set; }
+
+        [Range(0, 100000)]
+        public int Stock { get; set; }
+
+        [Required]
+        public string UrlImagen { get; set; } = "";
+
+        [Range(1, int.MaxValue, ErrorMessage = "Selecciona una categoria")]
+        public int CategoriaId { get; set; }
+    }
+}
