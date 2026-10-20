@@ -44,6 +44,11 @@
                     </InputSelect>
                 </div>
 
+                <label class="flex items-center gap-2 text-sm">
+                    <InputCheckbox @bind-Value="formulario.EsVip" />
+                    Producto exclusivo VIP
+                </label>
+
                 @if (error is not null)
                 {
                     <div class="ui-alert ui-alert-error">@error</div>
@@ -87,6 +92,7 @@
                 Precio = producto.Precio,
                 Stock = producto.Stock,
                 UrlImagen = producto.UrlImagen,
+                EsVip = producto.EsVip,
                 CategoriaId = Categorias.FirstOrDefault(c => c.Nombre == producto.Categoria)?.Id ?? 0
             };
         Visible = true;
@@ -95,7 +101,7 @@
 
     private async Task Guardar()
     {
-        var dto = new ProductoGuardarDto(formulario.Nombre, formulario.Precio, formulario.Stock, formulario.UrlImagen, formulario.CategoriaId);
+        var dto = new ProductoGuardarDto(formulario.Nombre, formulario.Precio, formulario.Stock, formulario.UrlImagen, formulario.CategoriaId, formulario.EsVip);
 
         error = productoId is null
             ? await productoService.Crear(dto)
@@ -123,6 +129,8 @@
 
         [Range(0, 100000)]
         public int Stock { get; set; }
+
+        public bool EsVip { get; set; }
 
         [Required]
         public string UrlImagen { get; set; } = "";

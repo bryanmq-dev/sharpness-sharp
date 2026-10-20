@@ -7,7 +7,7 @@ namespace sharpness_sharp.Repositories
 {
     public class VentaRepository(ApplicationAuthDbContext db)
     {
-        public async Task<(VentaDto? Venta, string? Error)> Crear(string usuarioId, VentaCrearDto dto)
+        public async Task<(VentaDto? Venta, string? Error)> Crear(string usuarioId, bool usuarioEsVip, VentaCrearDto dto)
         {
             if (dto.Items.Count == 0 || dto.Items.Any(item => item.Cantidad <= 0))
                 return (null, "El carrito esta vacio o tiene cantidades invalidas.");
@@ -18,7 +18,13 @@ namespace sharpness_sharp.Repositories
             if (productos.Count != ids.Count)
                 return (null, "Alguno de los productos no existe.");
 
-            var venta = new Venta { UsuarioId = usuarioId };
+            if (dto.CompraVip && !usuarioEsVip)
+                return (null, "Solo los clientes VIP pueden hacer compras VIP.");
+
+            if (!dto.CompraVip && productos.Any(producto => producto.EsVip))
+                return (null, "Los productos exclusivos solo se compran como VIP.");
+
+            var venta = new Venta { UsuarioId = usuarioId, CompraVip = dto.CompraVip };
 
             foreach (var item in dto.Items)
             {
@@ -66,7 +72,7 @@ namespace sharpness_sharp.Repositories
         }
 
         private static VentaDto ADto(Venta venta) =>
-            new(venta.Id, venta.Fecha, venta.Total,
+            new(venta.Id, venta.Fecha, venta.Total, venta.CompraVip,
                 venta.Detalles.Select(d => new VentaDetalleDto(d.Producto.Nombre, d.Cantidad, d.PrecioUnitario)).ToList());
     }
 }

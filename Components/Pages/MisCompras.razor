@@ -17,7 +17,13 @@
 @foreach (var venta in ventas)
 {
     <div class="ui-panel mb-4">
-        <p class="font-semibold">Compra #@venta.Id - @venta.Fecha.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+        <p class="font-semibold">
+            Compra #@venta.Id - @venta.Fecha.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+            @if (venta.CompraVip)
+            {
+                <span class="ml-2 rounded-xl bg-caramelo px-2 py-0.5 text-xs font-bold text-white">VIP</span>
+            }
+        </p>
         <ul class="my-2 text-sm">
             @foreach (var detalle in venta.Detalles)
             {

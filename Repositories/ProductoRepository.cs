@@ -58,7 +58,8 @@ namespace sharpness_sharp.Repositories
                 Precio = dto.Precio,
                 Stock = dto.Stock,
                 UrlImagen = dto.UrlImagen,
-                CategoriaId = dto.CategoriaId
+                CategoriaId = dto.CategoriaId,
+                EsVip = dto.EsVip
             };
 
             db.Productos.Add(producto);
@@ -77,6 +78,7 @@ namespace sharpness_sharp.Repositories
             producto.Stock = dto.Stock;
             producto.UrlImagen = dto.UrlImagen;
             producto.CategoriaId = dto.CategoriaId;
+            producto.EsVip = dto.EsVip;
             await db.SaveChangesAsync();
 
             return await ObtenerProducto(id);

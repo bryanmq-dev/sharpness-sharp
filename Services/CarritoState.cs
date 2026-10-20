@@ -10,6 +10,8 @@ namespace sharpness_sharp.Services
 
         public int Cantidad => Items.Sum(item => item.Cantidad);
 
+        public bool ContieneVip => Items.Any(item => item.Producto.EsVip);
+
         public decimal Total => Items.Sum(item => item.Cantidad * item.Producto.Precio);
 
         public void Agregar(ProductoDto producto)

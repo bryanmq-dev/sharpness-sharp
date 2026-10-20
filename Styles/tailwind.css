@@ -58,7 +58,7 @@ h1:focus {
   }
 
   .ui-btn {
-    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-4 active:scale-[0.99] hover:underline;
+    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-200 focus:outline-none focus:ring-4 active:scale-[0.99] hover:underline disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .ui-btn-block {

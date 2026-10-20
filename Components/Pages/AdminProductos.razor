@@ -27,7 +27,7 @@
             <tr>
                 <td><img src="@producto.UrlImagen" class="h-12 w-12 rounded-lg object-cover" /></td>
                 <td class="font-semibold">@producto.Nombre</td>
-                <td>@producto.Categoria</td>
+                <td>@producto.Categoria @(producto.EsVip ? "(VIP)" : "")</td>
                 <td>Bs. @producto.Precio</td>
                 <td>@producto.Stock</td>
                 <td class="flex gap-2">

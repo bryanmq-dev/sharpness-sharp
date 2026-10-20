@@ -4,7 +4,7 @@ namespace sharpness_sharp.Data.Dtos
 {
     public record ProductoDto(int Id, string Nombre, decimal Precio, int Stock, string UrlImagen, string Categoria, bool EsVip);
 
-    public record ProductoGuardarDto(string Nombre, decimal Precio, int Stock, string UrlImagen, int CategoriaId);
+    public record ProductoGuardarDto(string Nombre, decimal Precio, int Stock, string UrlImagen, int CategoriaId, bool EsVip = false);
 
     public record SuscripcionDto(int Id, DateTime FechaInicio, DateTime FechaFin, decimal Monto);
 

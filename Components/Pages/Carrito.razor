@@ -38,8 +38,16 @@ else
         <div class="ui-alert ui-alert-error mb-4">@error</div>
     }
 
+    @if (carrito.ContieneVip)
+    {
+        <div class="ui-alert ui-alert-info mb-4">Tu carrito tiene productos exclusivos: solo se pueden comprar como VIP.</div>
+    }
+
     <div class="flex gap-2">
-        <button class="ui-btn ui-btn-primary" @onclick="Comprar">Comprar</button>
+        <button class="ui-btn ui-btn-primary" disabled="@carrito.ContieneVip" @onclick="() => Comprar(false)">Comprar</button>
+        <AuthorizeView Roles="ClienteVIP">
+            <button class="ui-btn ui-btn-primary" @onclick="() => Comprar(true)">Comprar como VIP</button>
+        </AuthorizeView>
         <button class="ui-btn ui-btn-soft" @onclick="carrito.Vaciar">Vaciar</button>
     </div>
 }
@@ -47,9 +55,9 @@ else
 @code {
     string? error;
 
-    async Task Comprar()
+    async Task Comprar(bool compraVip)
     {
-        var dto = new VentaCrearDto(carrito.Items.Select(item => new VentaItemDto(item.Producto.Id, item.Cantidad)).ToList());
+        var dto = new VentaCrearDto(carrito.Items.Select(item => new VentaItemDto(item.Producto.Id, item.Cantidad)).ToList(), compraVip);
 
         error = await ventaService.Crear(dto);
         if (error is not null) return;
