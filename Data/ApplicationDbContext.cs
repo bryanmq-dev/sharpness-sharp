@@ -8,6 +8,8 @@ public class ApplicationAuthDbContext(DbContextOptions<ApplicationAuthDbContext>
 {
     public DbSet<Producto> Productos => Set<Producto>();
     public DbSet<Categoria> Categorias => Set<Categoria>();
+    public DbSet<Venta> Ventas => Set<Venta>();
+    public DbSet<DetalleVenta> DetallesVenta => Set<DetalleVenta>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -21,6 +23,14 @@ public class ApplicationAuthDbContext(DbContextOptions<ApplicationAuthDbContext>
         builder.Entity<Producto>()
             .Property(producto => producto.Precio)
             .HasPrecision(10, 2);
+
+        builder.Entity<Venta>()
+            .HasMany(venta => venta.Detalles)
+            .WithOne(detalle => detalle.Venta)
+            .HasForeignKey(detalle => detalle.VentaId);
+
+        builder.Entity<Venta>().Property(venta => venta.Total).HasPrecision(10, 2);
+        builder.Entity<DetalleVenta>().Property(detalle => detalle.PrecioUnitario).HasPrecision(10, 2);
 
         builder.Entity<Categoria>().HasData(
             new Categoria { Id = 1, Nombre = "Cafe" },

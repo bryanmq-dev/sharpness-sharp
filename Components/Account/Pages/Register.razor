@@ -1,4 +1,4 @@
-﻿@page "/Account/Register"
+@page "/Account/Register"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -24,6 +24,13 @@
         <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register" class="space-y-5">
             <DataAnnotationsValidator />
             <ValidationSummary class="text-sm text-red-600" role="alert" />
+
+            <div class="ui-field">
+                <label for="Input.Nombre" class="ui-label">Nombre</label>
+                <InputText @bind-Value="Input.Nombre" id="Input.Nombre" class="ui-input"
+                           autocomplete="name" aria-required="true" placeholder="Tu nombre" />
+                <ValidationMessage For="() => Input.Nombre" class="text-sm text-red-600" />
+            </div>
 
             <div class="ui-field">
                 <label for="Input.Email" class="ui-label">Email</label>
@@ -76,6 +83,7 @@
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+        user.Nombre = Input.Nombre;
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
@@ -136,6 +144,10 @@
 
     private sealed class InputModel
     {
+        [Required]
+        [StringLength(100)]
+        public string Nombre { get; set; } = "";
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

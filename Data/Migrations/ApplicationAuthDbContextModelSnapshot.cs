@@ -191,6 +191,10 @@ namespace sharpness_sharp.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -266,6 +270,34 @@ namespace sharpness_sharp.Migrations
                             Id = 4,
                             Nombre = "Postres"
                         });
+                });
+
+            modelBuilder.Entity("sharpness_sharp.Data.Models.DetalleVenta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("PrecioUnitario")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("VentaId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductoId");
+
+                    b.HasIndex("VentaId");
+
+                    b.ToTable("DetallesVenta");
                 });
 
             modelBuilder.Entity("sharpness_sharp.Data.Models.Producto", b =>
@@ -427,6 +459,30 @@ namespace sharpness_sharp.Migrations
                         });
                 });
 
+            modelBuilder.Entity("sharpness_sharp.Data.Models.Venta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Total")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Ventas");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -529,6 +585,25 @@ namespace sharpness_sharp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("sharpness_sharp.Data.Models.DetalleVenta", b =>
+                {
+                    b.HasOne("sharpness_sharp.Data.Models.Producto", "Producto")
+                        .WithMany()
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("sharpness_sharp.Data.Models.Venta", "Venta")
+                        .WithMany("Detalles")
+                        .HasForeignKey("VentaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Producto");
+
+                    b.Navigation("Venta");
+                });
+
             modelBuilder.Entity("sharpness_sharp.Data.Models.Producto", b =>
                 {
                     b.HasOne("sharpness_sharp.Data.Models.Categoria", "Categoria")
@@ -540,9 +615,25 @@ namespace sharpness_sharp.Migrations
                     b.Navigation("Categoria");
                 });
 
+            modelBuilder.Entity("sharpness_sharp.Data.Models.Venta", b =>
+                {
+                    b.HasOne("sharpness_sharp.Data.ApplicationUser", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Usuario");
+                });
+
             modelBuilder.Entity("sharpness_sharp.Data.Models.Categoria", b =>
                 {
                     b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("sharpness_sharp.Data.Models.Venta", b =>
+                {
+                    b.Navigation("Detalles");
                 });
 #pragma warning restore 612, 618
         }
