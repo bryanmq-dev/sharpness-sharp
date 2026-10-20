@@ -1,4 +1,4 @@
-@using sharpness_sharp.Data.Models
+@using sharpness_sharp.Data.Dtos
 <div class="flex flex-col rounded-xl bg-espuma p-3 shadow-lg transition hover:-translate-y-1">
     <img src="@producto.UrlImagen" class="h-40 w-full rounded-2xl object-cover" />
     <p class="mx-1 mt-2 text-xl font-bold text-cafe">@producto.Nombre</p>
@@ -9,5 +9,5 @@
 
 @code {
     [Parameter]
-    public Producto producto { get; set; } = null!;
+    public ProductoDto producto { get; set; } = null!;
 }
