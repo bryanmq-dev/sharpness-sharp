@@ -1,12 +1,13 @@
 using sharpness_sharp.Data.Dtos;
-using sharpness_sharp.Repositories;
 
 namespace sharpness_sharp.Services
 {
-    public class ProductoService(ProductoRepository repositorio)
+    public class ProductoService(HttpClient http)
     {
-        public Task<List<ProductoDto>> ObtenerProductos() => repositorio.ObtenerProductos();
+        public async Task<List<ProductoDto>> ObtenerProductos() =>
+            await http.GetFromJsonAsync<List<ProductoDto>>("api/productos") ?? new();
 
-        public Task<List<CategoriaDto>> ObtenerCategorias() => repositorio.ObtenerCategorias();
+        public async Task<List<CategoriaDto>> ObtenerCategorias() =>
+            await http.GetFromJsonAsync<List<CategoriaDto>>("api/categorias") ?? new();
     }
 }

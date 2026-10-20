@@ -1,8 +1,9 @@
 @inherits LayoutComponentBase
 @implements IDisposable
 @inject NavigationManager NavigationManager
+@inject sharpness_sharp.Services.TemaState Tema
 
-<div class="flex min-h-screen flex-col bg-crema md:flex-row">
+<div class="flex min-h-screen flex-col bg-crema md:flex-row" style="--color-cafe: @Tema.Color">
     <aside class="bg-cafe text-white md:w-64 md:shrink-0">
         <NavMenu />
     </aside>
@@ -53,7 +54,10 @@
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+        Tema.OnCambio += OnTemaCambio;
     }
+
+    private void OnTemaCambio() => InvokeAsync(StateHasChanged);
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
@@ -64,5 +68,6 @@
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
+        Tema.OnCambio -= OnTemaCambio;
     }
 }

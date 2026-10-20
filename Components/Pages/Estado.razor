@@ -1,0 +1,42 @@
+@page "/estado"
+@using sharpness_sharp.Services
+@inject TemaState tema
+@inject ContadorSingleton contadorSingleton
+@inject ContadorScoped contadorScoped
+@inject ContadorTransient transientA
+@inject ContadorTransient transientB
+
+<PageTitle>Estado</PageTitle>
+
+<h1 class="mb-4 text-2xl font-bold text-cafe">Estado de la aplicacion</h1>
+
+<div class="grid gap-4 md:grid-cols-3">
+    <div class="ui-panel">
+        <h2 class="ui-section-title">Singleton</h2>
+        <p class="text-xs text-stone-500">@contadorSingleton.Id</p>
+        <p class="my-2 text-3xl font-bold">@contadorSingleton.Valor</p>
+        <button class="ui-btn ui-btn-primary" @onclick="contadorSingleton.Sumar">Sumar</button>
+    </div>
+
+    <div class="ui-panel">
+        <h2 class="ui-section-title">Scoped</h2>
+        <p class="text-xs text-stone-500">@contadorScoped.Id</p>
+        <p class="my-2 text-3xl font-bold">@contadorScoped.Valor</p>
+        <button class="ui-btn ui-btn-primary" @onclick="contadorScoped.Sumar">Sumar</button>
+    </div>
+
+    <div class="ui-panel">
+        <h2 class="ui-section-title">Transient</h2>
+        <p class="text-xs text-stone-500">A: @transientA.Id</p>
+        <p class="text-xs text-stone-500">B: @transientB.Id</p>
+    </div>
+</div>
+
+<div class="ui-panel mt-4 flex items-center gap-4">
+    <label for="color" class="ui-label">Color de la aplicacion (Singleton)</label>
+    <input id="color" type="color" value="@tema.Color" @onchange="CambiarColor" />
+</div>
+
+@code {
+    void CambiarColor(ChangeEventArgs e) => tema.Cambiar(e.Value?.ToString() ?? tema.Color);
+}

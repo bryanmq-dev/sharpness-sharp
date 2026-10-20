@@ -14,6 +14,10 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped<ProductoRepository>();
 builder.Services.AddScoped<ProductoService>();
+builder.Services.AddSingleton<TemaState>();
+builder.Services.AddSingleton<ContadorSingleton>();
+builder.Services.AddScoped<ContadorScoped>();
+builder.Services.AddTransient<ContadorTransient>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
