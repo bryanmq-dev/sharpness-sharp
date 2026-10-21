@@ -1,6 +1,4 @@
-﻿using sharpness_sharp.Services;
-
-namespace sharpness_sharp.Config;
+﻿namespace sharpness_sharp.Config;
 
 public static class SharpnessHttpClient
 {
