@@ -192,8 +192,13 @@ aplicarlas a mano antes del primer arranque: `SeedAuth()` lo hace solo.
 "Api": { "BaseUrl": "https://localhost:7249/" }
 ```
 
-Registra un `HttpClient` con nombre (`APIClient`) y además lo expone como **scoped**, para
-inyectarlo directo en servicios y componentes sin pedir `IHttpClientFactory`.
+Registra un `HttpClient` **scoped** (uno por circuito de Blazor), para inyectarlo directo en
+servicios y componentes.
+
+- Cada cliente tiene su propio `SocketsHttpHandler` con un `CookieContainer`, cargado con la
+  cookie de sesión de Identity (HttpOnly) del usuario. Así las llamadas a la propia API van
+  autenticadas sin armar el header `Cookie` a mano. El contenedor NO se comparte entre usuarios:
+  por eso no se usa `IHttpClientFactory`, cuyos handlers se reutilizan entre peticiones.
 
 - Si `Api:BaseUrl` está vacío el cliente igual sirve: sólo hay que usar URLs absolutas,
   que es lo que se hace al consumir una API ajena.

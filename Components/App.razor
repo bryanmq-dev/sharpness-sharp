@@ -1,3 +1,4 @@
+@using sharpness_sharp.Services
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +15,7 @@
 </head>
 
 <body>
-    <Routes @rendermode="PageRenderMode" Cookie="@HttpContext.Request.Headers.Cookie.ToString()" />
+    <Routes @rendermode="PageRenderMode" Cookies="@CookieState.DeSesion(HttpContext.Request)" />
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
     <script src="@Assets["Components/Account/Shared/PasskeySubmit.razor.js"]" type="module"></script>

@@ -22,7 +22,7 @@
 
 @code {
     [Parameter]
-    public string? Cookie { get; set; }
+    public Dictionary<string, string>? Cookies { get; set; }
 
-    protected override void OnInitialized() => cookieState.Valor = Cookie;
+    protected override void OnInitialized() => cookieState.Cargar(Cookies);
 }

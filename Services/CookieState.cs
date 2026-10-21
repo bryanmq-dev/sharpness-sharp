@@ -1,18 +1,26 @@
+using System.Net;
+using sharpness_sharp.Config;
+
 namespace sharpness_sharp.Services
 {
-    public class CookieState
+    public class CookieState(IConfiguration configuration)
     {
-        public string? Valor { get; set; }
-    }
+        public const string PrefijoSesion = ".AspNetCore.Identity.Application";
 
-    public class CookieHandler(CookieState estado, HttpMessageHandler interno) : DelegatingHandler(interno)
-    {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage solicitud, CancellationToken token)
+        public CookieContainer Contenedor { get; } = new();
+
+        public static Dictionary<string, string> DeSesion(HttpRequest solicitud) =>
+            solicitud.Cookies
+                .Where(cookie => cookie.Key.StartsWith(PrefijoSesion))
+                .ToDictionary(cookie => cookie.Key, cookie => cookie.Value);
+
+        public void Cargar(Dictionary<string, string>? cookies)
         {
-            if (!string.IsNullOrEmpty(estado.Valor))
-                solicitud.Headers.TryAddWithoutValidation("Cookie", estado.Valor);
+            var destino = SharpnessHttpClient.BaseUri(configuration);
+            if (cookies is null || destino is null) return;
 
-            return base.SendAsync(solicitud, token);
+            foreach (var (nombre, valor) in cookies)
+                Contenedor.Add(destino, new Cookie(nombre, valor) { HttpOnly = true });
         }
     }
 }

@@ -61,6 +61,7 @@ namespace sharpness_sharp.Config
 
             services.ConfigureApplicationCookie(opciones =>
             {
+                opciones.Cookie.HttpOnly = true;
                 opciones.Events.OnRedirectToLogin = contexto => RedirigirOResponder(contexto, StatusCodes.Status401Unauthorized);
                 opciones.Events.OnRedirectToAccessDenied = contexto => RedirigirOResponder(contexto, StatusCodes.Status403Forbidden);
             });
