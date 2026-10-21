@@ -16,22 +16,22 @@ namespace sharpness_sharp.Services
         public async Task<string?> Crear(ProductoGuardarDto dto)
         {
             var respuesta = await http.PostAsJsonAsync("api/productos", dto);
-            return await Error(respuesta);
+            return await EvaluarRespuesta(respuesta);
         }
 
         public async Task<string?> Actualizar(int id, ProductoGuardarDto dto)
         {
             var respuesta = await http.PutAsJsonAsync($"api/productos/{id}", dto);
-            return await Error(respuesta);
+            return await EvaluarRespuesta(respuesta);
         }
 
         public async Task<string?> Eliminar(int id)
         {
             var respuesta = await http.DeleteAsync($"api/productos/{id}");
-            return await Error(respuesta);
+            return await EvaluarRespuesta(respuesta);
         }
 
-        private static async Task<string?> Error(HttpResponseMessage respuesta) =>
+        private static async Task<string?> EvaluarRespuesta(HttpResponseMessage respuesta) =>
             respuesta.IsSuccessStatusCode ? null : await respuesta.Content.ReadAsStringAsync();
     }
 }
