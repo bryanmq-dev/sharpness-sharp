@@ -134,6 +134,12 @@ Lo que ya viene andando, sin escribir una línea: registro, confirmación de cue
 2FA, passkeys, recuperación de contraseña y exportación de datos personales — las páginas
 están en `Components/Account/`.
 
+- La cookie de sesión es **HttpOnly**: el JavaScript del navegador no puede leerla.
+- Bajo `/api` un pedido sin sesión responde **401** y uno sin el rol necesario **403**, en vez de
+  redirigir a la página de login (que sólo tiene sentido para páginas).
+- `AddAuthorization`, `UseAuthentication` y `UseAuthorization` ya están en `Program.cs`, así que
+  `.RequireAuthorization()` y `[Authorize(Roles = "...")]` funcionan en endpoints y páginas.
+
 ### Seed inicial
 
 ```csharp
