@@ -1,4 +1,7 @@
 ﻿@using sharpness_sharp.Components.Account.Shared
+@using sharpness_sharp.Config
+@inject CookieState cookieState
+
 <Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
@@ -9,3 +12,10 @@
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
+
+@code {
+    [Parameter]
+    public Dictionary<string, string>? Cookies { get; set; }
+
+    protected override void OnInitialized() => cookieState.Cargar(Cookies);
+}

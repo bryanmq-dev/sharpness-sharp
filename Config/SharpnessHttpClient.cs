@@ -2,8 +2,6 @@
 
 public static class SharpnessHttpClient
 {
-    public const string ApiClientName = "APIClient";
-
     /// <summary>
     /// Configura el HttpClient de la aplicación.
     ///
@@ -13,15 +11,20 @@ public static class SharpnessHttpClient
     /// </summary>
     public static IServiceCollection UseHttpClient(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHttpClient(ApiClientName, client =>
-        {
-            var baseUrl = configuration["Api:BaseUrl"];
+        services.AddScoped<CookieState>();
 
-            if (!string.IsNullOrWhiteSpace(baseUrl))
-                client.BaseAddress = new Uri(ConBarraFinal(baseUrl));
+        services.AddScoped(sp =>
+        {
+            var handler = new SocketsHttpHandler
+            {
+                UseCookies = true,
+                CookieContainer = sp.GetRequiredService<CookieState>().Contenedor,
+                PooledConnectionLifetime = TimeSpan.FromMinutes(5),
+            };
+
+            return new HttpClient(handler) { BaseAddress = BaseUri(configuration) };
         });
 
-        services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ApiClientName));
 
         return services;
     }
@@ -33,4 +36,11 @@ public static class SharpnessHttpClient
     /// Por el mismo motivo las rutas relativas NO deben empezar con "/".
     /// </summary>
     private static string ConBarraFinal(string url) => url.EndsWith('/') ? url : url + "/";
+
+    public static Uri? BaseUri(IConfiguration configuration)
+    {
+        var baseUrl = configuration["Api:BaseUrl"];
+
+        return string.IsNullOrWhiteSpace(baseUrl) ? null : new Uri(ConBarraFinal(baseUrl));
+    }
 }
