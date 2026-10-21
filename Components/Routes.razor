@@ -6,7 +6,14 @@
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
             <NotAuthorized>
-                <RedirectToLogin />
+                @if (context.User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="ui-alert ui-alert-warn">No tenes permisos para ver esta pagina.</div>
+                }
+                else
+                {
+                    <RedirectToLogin />
+                }
             </NotAuthorized>
         </AuthorizeRouteView>
         <FocusOnNavigate RouteData="routeData" Selector="h1" />

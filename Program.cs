@@ -7,6 +7,8 @@ builder.Services.UseHttpClient(builder.Configuration);
 
 builder.Services.UseAuth(builder.Configuration);
 
+builder.Services.AddAuthorization();
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
@@ -21,8 +23,13 @@ else
     app.UseHsts();
 }
 
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+app.UseWhen(
+    contexto => !contexto.Request.Path.StartsWithSegments("/api"),
+    rama => rama.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true));
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAntiforgery();
 
