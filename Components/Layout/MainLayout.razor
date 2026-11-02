@@ -3,38 +3,45 @@
 @inject NavigationManager NavigationManager
 
 <div class="flex min-h-screen flex-col md:flex-row">
-    <aside class="bg-slate-800 text-white md:w-64 md:shrink-0">
-        <NavMenu />
-    </aside>
-
-
 
     <main class="flex-1">
-        <div class="flex h-14 items-center justify-end border-b border-gray-200 bg-gray-50 px-4">
-            <AuthorizeView>
-                <NotAuthorized>
-                    <div class="ui-btn ui-btn-primary">
-                        <NavLink href="Account/Login">Iniciar Sesion</NavLink>
-                    </div>
-                </NotAuthorized>
-                <Authorized>
-                    <div class="ui-btn-primary ui-btn mx-2">
-                        <NavLink href="Account/Manage"> @context.User.Identity?.Name
-                        </NavLink>
-                    </div>
-                    <div class="ui-btn-primary ui-btn mx-2">
-                        <form action="Account/Logout" method="post">
-                            <AntiforgeryToken />
-                            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                            <button type="submit">
-                                Logout
-                            </button>
-                        </form>
-                    </div>
-                </Authorized>
-            </AuthorizeView>
-        </div>
+        <div class="flex w-full items-center justify-between border-b border-gray-200 bg-gray-50 px-4">
+            <div class="flex">
+                @foreach (var link in links)
+                {
+                    <NavLink class="ui-btn ui-btn-primary" href="@link.Address" Match="NavLinkMatch.All">
+                        @link.Label
+                    </NavLink>
+                }
+            </div>
 
+            <div class="flex h-14 items-center justify-end">
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <div class="ui-btn ui-btn-primary">
+                            <NavLink href="Account/Login">Iniciar Sesion</NavLink>
+                        </div>
+                    </NotAuthorized>
+                    <Authorized>
+                        <div class="ui-btn-primary ui-btn mx-2">
+                            <NavLink href="Account/Manage"> @context.User.Identity?.Name
+                            </NavLink>
+                        </div>
+                        <div class="ui-btn-primary ui-btn mx-2">
+                            <form action="Account/Logout" method="post">
+                                <AntiforgeryToken />
+                                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                <button type="submit">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+
+        </div>
+    
         <article class=" px-4 pt-4">
             @Body
         </article>
@@ -51,6 +58,11 @@
 @code {
     private string? currentUrl;
 
+    private List<Link> links = new List<Link>()
+    {
+        new("Inicio", "/"),
+    };
+
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
@@ -66,5 +78,17 @@
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    private class Link
+    {
+        public string Label;
+        public string Address;
+
+        public Link(string label, string address)
+        {
+            Label = label;
+            Address = address;
+        }
     }
 }
